@@ -35,7 +35,6 @@ import { createFileV2 } from "./rapiduploadTask";
 export default class GeneratebdlinkTask {
   isSharePage: boolean; // 分享页标记
   isGenView: boolean; // 生成页(秒传框输入gen)标记
-  isFast: boolean; // 极速生成功能开关标记
   recursive: boolean; // 递归生成标记
   savePath: string;
   dirList: Array<string>;
@@ -53,7 +52,6 @@ export default class GeneratebdlinkTask {
   reset(): void {
     this.isGenView = false;
     this.isSharePage = false;
-    this.isFast = false;
     this.recursive = false;
     this.savePath = "";
     this.bdstoken = getBdstoken(); // 此处bdstoken不可删除, 会在下方createFileV2方法调用
@@ -158,14 +156,15 @@ export default class GeneratebdlinkTask {
             this.scanFile(i + 1); // 返回列表为空, 即此文件夹文件全部扫描完成
           else {
             data.list.forEach((item: any) => {
-              item.isdir ||
+              if (!item.isdir) {
                 this.fileInfoList.push({
                   path: item.path,
                   size: item.size,
                   fs_id: item.fs_id,
-                  md5: this.isFast ? decryptMd5(item.md5.toLowerCase()) : "",
+                  md5: "",
                   md5s: "",
                 }); // 筛选文件(isdir=0)
+              }
             });
             this.scanFile(i, start + listLimit); // 从下一个起点继续检索列表
           }
@@ -201,22 +200,19 @@ export default class GeneratebdlinkTask {
       });
     // 生成完成
     if (i >= this.fileInfoList.length) {
-      if (this.isFast) this.checkMd5(0); // 已开启 "极速生成", 执行md5检查
-      else this.onFinish(this.fileInfoList);
+      this.onFinish(this.fileInfoList);
       return;
     }
-    // 未开启 "极速生成", 刷新弹窗内的任务进度
-    if (!this.isFast) this.onProcess(i, this.fileInfoList);
+    //  刷新弹窗内的任务进度
+    this.onProcess(i, this.fileInfoList);
     let file = this.fileInfoList[i];
     // 跳过扫描失败的目录路径
     if (file.errno && file.isdir) {
       this.generateBdlink(i + 1);
       return;
     }
-    // 已开启 "极速生成" 且已获取到md5, 跳过普通生成步骤
-    if (this.isFast && file.md5) this.generateBdlink(i + 1);
     // 普通生成步骤
-    else this.isSharePage ? this.getShareDlink(i) : this.getDlink(i);
+    this.isSharePage ? this.getShareDlink(i) : this.getDlink(i);
   }
 
   /**
@@ -244,9 +240,7 @@ export default class GeneratebdlinkTask {
           file.size = data.list[0].size;
           file.fs_id = data.list[0].fs_id;
           // 已开启极速生成, 直接取meta内的md5
-          file.md5 = this.isFast
-            ? decryptMd5(data.list[0].md5.toLowerCase())
-            : "";
+          file.md5 = "";
           file.md5s = "";
           this.getDlink(i);
         } else {
@@ -356,11 +350,11 @@ export default class GeneratebdlinkTask {
         }
         // 请求报错
         file.errno = data.errno;
-        this.isFast ? this.checkMd5(i + 1) : this.generateBdlink(i + 1);
+        this.generateBdlink(i + 1);
       },
       (statusCode) => {
         file.errno = statusCode;
-        this.isFast ? this.checkMd5(i + 1) : this.generateBdlink(i + 1);
+        this.generateBdlink(i + 1);
       }
     );
   }
@@ -371,11 +365,8 @@ export default class GeneratebdlinkTask {
    * @param {string} dlink
    */
   downloadFileData(i: number, dlink: string): void {
-    let dlSize: number,
-      file = this.fileInfoList[i];
-    if (this.isFast)
-      dlSize = 1; // "极速下载" 不需要生成slice-md5, 故无需下载文件数据
-    else dlSize = file.size < 262144 ? 1 : 262143; //slice-md5: 文件前256KiB的md5, size<256KiB则直接取md5即可, 无需下载文件数据
+    let file = this.fileInfoList[i];
+    let dlSize = file.size < 262144 ? 1 : 262143; //slice-md5: 文件前256KiB的md5, size<256KiB则直接取md5即可, 无需下载文件数据
     ajax(
       {
         url: dlink,
@@ -385,16 +376,16 @@ export default class GeneratebdlinkTask {
           Range: `bytes=0-${dlSize}`,
           "User-Agent": UA,
         },
-        onprogress: this.isFast ? () => {} : this.onProgress,
+        onprogress: this.onProgress,
       },
       (data) => {
-        if (!this.isFast) this.onProgress({ loaded: 100, total: 100 }); // 100%
+        this.onProgress({ loaded: 100, total: 100 }); // 100%
         this.parseDownloadData(i, data);
       },
       (statusCode) => {
         if (statusCode === 404) file.errno = 909;
         else file.errno = statusCode;
-        this.isFast ? this.checkMd5(i + 1) : this.generateBdlink(i + 1);
+        this.generateBdlink(i + 1);
       }
     );
   }
@@ -410,7 +401,7 @@ export default class GeneratebdlinkTask {
     // 下载直链重定向到此域名, 判定为文件和谐
     if (data.finalUrl.includes("issuecdn.baidupcs.com")) {
       file.errno = 1919;
-      this.isFast ? this.checkMd5(i + 1) : this.generateBdlink(i + 1);
+      this.generateBdlink(i + 1);
       return;
     }
     // 从下载接口获取md5, 此步骤可确保获取到正确md5
@@ -428,24 +419,22 @@ export default class GeneratebdlinkTask {
     } else {
       // 两个下载接口均未拿到md5, 失败跳出
       file.errno = 996;
-      this.isFast ? this.checkMd5(i + 1) : this.generateBdlink(i + 1);
+      this.generateBdlink(i + 1);
       return;
     }
     // 获取md5s, "极速生成" 跳过此步
-    if (!this.isFast) {
-      if (file.size < 262144) file.md5s = file.md5; // 此时md5s=md5
-      else {
-        // 计算md5s
-        let spark = new SparkMD5.ArrayBuffer();
-        spark.append(data.response);
-        let sliceMd5 = spark.end();
-        file.md5s = sliceMd5;
-      }
-      let interval = this.fileInfoList.length > 1 ? 2000 : 1000;
-      setTimeout(() => {
-        this.generateBdlink(i + 1);
-      }, interval);
-    } else this.checkMd5(i + 1);
+    if (file.size < 262144) file.md5s = file.md5; // 此时md5s=md5
+    else {
+      // 计算md5s
+      let spark = new SparkMD5.ArrayBuffer();
+      spark.append(data.response);
+      let sliceMd5 = spark.end();
+      file.md5s = sliceMd5;
+    }
+    let interval = this.fileInfoList.length > 1 ? 2000 : 1000;
+    setTimeout(() => {
+      this.generateBdlink(i + 1);
+    }, interval);
   }
 
   /**
@@ -513,7 +502,7 @@ export default class GeneratebdlinkTask {
           size: item.size,
           fs_id: item.fs_id,
           // 已开启极速生成, 直接取meta内的md5
-          md5: this.isFast ? decryptMd5(item.md5.toLowerCase()) : "",
+          md5: "",
           md5s: "",
         });
     }
