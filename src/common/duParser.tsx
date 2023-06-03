@@ -134,7 +134,7 @@ DuParser.parseDu_v4 = function parseDu_v3(szUrl: string) {
       return z
         .trim()
         .match(
-          /^([\da-f]{9}[\da-z][\da-f]{22})#(?:([\da-f]{9}[\da-z][\da-f]{22})#)?([\d]{1,20})#([\s\S]+)/i
+          /^([\da-f]{9}[\da-z][\da-f]{22})#([\da-f]{9}[\da-z][\da-f]{22})#([\d]{1,20})#([\s\S]+)/i
         ); // 22.8.29新增支持第10位为g-z的加密md5, 输入后自动解密转存
     })
     .filter(function (z) {
@@ -144,7 +144,7 @@ DuParser.parseDu_v4 = function parseDu_v3(szUrl: string) {
       return {
         // 标准码 / 短版标准码(无md5s)
         md5: decryptMd5(info[1].toLowerCase()),
-        md5s: info[2]?decryptMd5(info[2].toLowerCase()) : "",
+        md5s: decryptMd5(info[2].toLowerCase()),
         size: info[3],
         path: info[4],
       };
