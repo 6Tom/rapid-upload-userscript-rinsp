@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name           秒传链接提取
-// @version        3.0.1
+// @version        3.0.2
 // @author         虚无
 // @description    用于提取和生成百度网盘秒传链接
 // @match          *://pan.baidu.com/disk/home*
@@ -4771,7 +4771,7 @@ module.exports = ".mzf_btn{text-align:center;font-size:.85em;color:#09aaff;borde
 /***/ 184:
 /***/ ((module) => {
 
-module.exports = "<div class=\"panel-body\" style=\"height: 220px;\">\r\n  <div class=\"mzf_updateInfo\">\r\n    <p>更新日志:</p>\r\n    <p>3.0.1 拒绝短秒传输入</p>\r\n    <p>3.0.0 挽救秒传功能</p>\r\n  </div>\r\n</div>"
+module.exports = "<div class=\"panel-body\" style=\"height: 220px;\">\r\n  <div class=\"mzf_updateInfo\">\r\n    <p>更新日志:</p>\r\n    <p>3.0.2 修正404时正确报错</p>\r\n    <p>3.0.1 拒绝短秒传输入</p>\r\n    <p>3.0.0 挽救秒传功能</p>\r\n  </div>\r\n</div>"
 
 /***/ }),
 
@@ -4858,9 +4858,9 @@ var css_app_default = /*#__PURE__*/__webpack_require__.n(css_app);
  * @LastEditors: mengzonefire
  * @Description: 存放各种全局常量对象
  */
-var version = "3.0.1"; // 当前版本号
-var updateDate = "23.6.3"; // 更新弹窗显示的日期
-var updateInfoVer = "3.0.1"; // 更新弹窗的版本, 没必要提示的非功能性更新就不弹窗了
+var version = "3.0.2"; // 当前版本号
+var updateDate = "23.6.4"; // 更新弹窗显示的日期
+var updateInfoVer = "3.0.2"; // 更新弹窗的版本, 没必要提示的非功能性更新就不弹窗了
 var swalCssVer = "3.0.1"; // 由于其他主题的Css代码会缓存到本地, 故更新主题包版本(url)时, 需要同时更新该字段以刷新缓存
 var locUrl = location.href;
 var baiduNewPage = "baidu.com/disk/main"; // 匹配新版度盘界面
@@ -5770,6 +5770,7 @@ var RapiduploadTask = /** @class */ (function () {
             _this.saveFileV2(i + 1);
         };
         createFileV2.call(this, file, function (data) {
+            console.info(JSON.stringify(data));
             data = data.response;
             file.errno = 2 === data.errno ? 114 : data.errno;
             file.errno = 31190 === file.errno ? 404 : file.errno;
@@ -5839,6 +5840,9 @@ function createFileV2(file, onResponsed, onFailed, retry, isGen) {
         else if (2 === data.response.errno && retry < retryMax_apiV2) {
             // console.log(`转存接口错误, 重试${retry + 1}次: ${file.path}`); // debug
             createFileV2.call(_this, file, onResponsed, onFailed, ++retry, isGen);
+        }
+        else if (2 !== data.response.return_type) {
+            onFailed(404);
         }
         else
             onResponsed(data);

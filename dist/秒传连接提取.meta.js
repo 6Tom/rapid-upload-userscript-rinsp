@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name           秒传链接提取
-// @version        3.0.1
+// @version        3.0.2
 // @author         虚无
 // @description    用于提取和生成百度网盘秒传链接
 // @match          *://pan.baidu.com/disk/home*

@@ -62,6 +62,7 @@ export default class RapiduploadTask {
       this,
       file,
       (data: any) => {
+        console.info(JSON.stringify(data))
         data = data.response;
         file.errno = 2 === data.errno ? 114 : data.errno;
         file.errno = 31190 === file.errno ? 404 : file.errno;
@@ -136,6 +137,8 @@ export function createFileV2(
       } else if (2 === data.response.errno && retry < retryMax_apiV2) {
         // console.log(`转存接口错误, 重试${retry + 1}次: ${file.path}`); // debug
         createFileV2.call(this, file, onResponsed, onFailed, ++retry, isGen);
+      } else if (2 !== data.response.return_type) {
+        onFailed(404);
       } else onResponsed(data);
     },
     onFailed
