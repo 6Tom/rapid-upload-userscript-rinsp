@@ -29,7 +29,7 @@ import {
 } from "./const";
 // import { createFileV2 } from "./rapiduploadTask";
 import SparkMD5 from "spark-md5";
-import { createFileV2 } from "./rapiduploadTask";
+import { rapiduploadCreateFile } from "./rapiduploadTask";
 
 // 普通生成:
 export default class GeneratebdlinkTask {
@@ -460,7 +460,7 @@ export default class GeneratebdlinkTask {
     // 主要是因为频繁请求直链接口获取正确md5会导致#9019错误(即账号被限制), 对大批量生成秒传有很大影响, 极速生成功能使用此验证则可以节约请求以避免此问题
     // 为避免百度后面又改接口导致生成错误秒传问题, 这个接口特性我会写个定时脚本每天测试一次, 出了问题就能即使更新
     // 目前发现是通过秒传拿到的文件再生成秒传不会有这问题, 上传的文件或通过分享转存的别人上传的文件则会有
-    createFileV2.call(
+    rapiduploadCreateFile.call(
       this,
       file,
       (data: any) => {

@@ -177,6 +177,42 @@ export function suffixChange(path: string): string {
 }
 
 /**
+ * @description: 随机大小写
+ * @param {string} str
+ * @return {string}
+ */
+ export function randomStringTransform(str: string): string {
+  const tempString = [];
+  for (let i of str) {
+    if (!Math.round(Math.random())) {
+      tempString.push(i.toLowerCase());
+    } else {
+      tempString.push(i.toUpperCase());
+    }
+  }
+  return tempString.join("");
+}
+
+/**
+ * @description: 交替大小写
+ * @param {string} str
+ * @return {string}
+ */
+ export function alternateCaseTransform(str: string): string {
+  const tempString = [];
+  let low = false;
+  for (let i of str) {
+    if (i >= 'a' && i <= 'z' || i >= 'A' && i <= 'Z') {
+      tempString.push(low ? i.toLowerCase() : i.toUpperCase());
+      low = !low;
+    } else {
+      tempString.push(i);
+    }
+  }
+  return tempString.join("");
+}
+
+/**
  * @description: 逆转字符串大小写
  * @param {string} str 输入字符串
  * @return {string} 处理后的字符串

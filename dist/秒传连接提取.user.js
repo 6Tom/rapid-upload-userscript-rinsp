@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name           秒传链接提取
-// @version        3.0.2
+// @version        3.0.5
 // @author         虚无
 // @description    用于提取和生成百度网盘秒传链接
 // @match          *://pan.baidu.com/disk/home*
@@ -4771,7 +4771,7 @@ module.exports = ".mzf_btn{text-align:center;font-size:.85em;color:#09aaff;borde
 /***/ 184:
 /***/ ((module) => {
 
-module.exports = "<div class=\"panel-body\" style=\"height: 220px;\">\r\n  <div class=\"mzf_updateInfo\">\r\n    <p>更新日志:</p>\r\n    <p>3.0.2 修正404时正确报错</p>\r\n    <p>3.0.1 拒绝短秒传输入</p>\r\n    <p>3.0.0 挽救秒传功能</p>\r\n  </div>\r\n</div>"
+module.exports = "<div class=\"panel-body\" style=\"height: 220px;\">\r\n  <div class=\"mzf_updateInfo\">\r\n    <p>更新日志:</p>\r\n    <p>3.0.5 提高旧秒传兼容性</p>\r\n    <p>3.0.4 没有发布</p>\r\n    <p>3.0.3 改用rapidupload接口</p>\r\n    <p>3.0.2 修正404时正确报错</p>\r\n    <p>3.0.1 拒绝短秒传输入</p>\r\n    <p>3.0.0 挽救秒传功能</p>\r\n  </div>\r\n</div>"
 
 /***/ }),
 
@@ -4858,9 +4858,9 @@ var css_app_default = /*#__PURE__*/__webpack_require__.n(css_app);
  * @LastEditors: mengzonefire
  * @Description: 存放各种全局常量对象
  */
-var version = "3.0.2"; // 当前版本号
+var version = "3.0.5"; // 当前版本号
 var updateDate = "23.6.4"; // 更新弹窗显示的日期
-var updateInfoVer = "3.0.2"; // 更新弹窗的版本, 没必要提示的非功能性更新就不弹窗了
+var updateInfoVer = "3.0.5"; // 更新弹窗的版本, 没必要提示的非功能性更新就不弹窗了
 var swalCssVer = "3.0.1"; // 由于其他主题的Css代码会缓存到本地, 故更新主题包版本(url)时, 需要同时更新该字段以刷新缓存
 var locUrl = location.href;
 var baiduNewPage = "baidu.com/disk/main"; // 匹配新版度盘界面
@@ -5769,118 +5769,99 @@ var RapiduploadTask = /** @class */ (function () {
             file.errno = statusCode;
             _this.saveFileV2(i + 1);
         };
-        createFileV2.call(this, file, function (data) {
+        rapiduploadCreateFile.call(this, file, function (data) {
             console.info(JSON.stringify(data));
             data = data.response;
             file.errno = 2 === data.errno ? 114 : data.errno;
             file.errno = 31190 === file.errno ? 404 : file.errno;
             _this.saveFileV2(i + 1);
         }, onFailed);
-        // precreateFileV2.call(
-        //   this,
-        //   file,
-        //   (data: any) => {
-        //     data = data.response;
-        //     if (0 === data.errno) {
-        //       if (0 === data.block_list.length) {
-        //         this.createFileV2(
-        //           file,
-        //           (data) => {
-        //             data = data.response;
-        //             file.errno = 2 === data.errno ? 114 : data.errno;
-        //             file.errno = 31190 === file.errno ? 404 : file.errno;
-        //             this.saveFileV2(i + 1);
-        //           },
-        //           onFailed
-        //         );
-        //       } else {
-        //         file.errno = 404;
-        //         this.saveFileV2(i + 1);
-        //       }
-        //     } else {
-        //       file.errno = data.errno;
-        //       this.saveFileV2(i + 1);
-        //     }
-        //   },
-        //   onFailed
-        // );
     };
     return RapiduploadTask;
 }());
 /* harmony default export */ const rapiduploadTask = (RapiduploadTask);
+var retryTransforms = [
+    {
+        transformContentMd5: function (str) {
+            return str.toUpperCase();
+        },
+        transformSliceMd5: function (str) {
+            return str.toUpperCase();
+        }
+    },
+    {
+        transformContentMd5: function (str) {
+            return str.toLowerCase();
+        },
+        transformSliceMd5: function (str) {
+            return str.toLowerCase();
+        }
+    },
+    {
+        transformContentMd5: function (str) {
+            return alternateCaseTransform(str);
+        },
+        transformSliceMd5: function (str) {
+            return str.toLowerCase();
+        }
+    },
+    {
+        transformContentMd5: function (str) {
+            var lower = str.toLowerCase();
+            var upper = str.toUpperCase();
+            if (lower === upper)
+                return str;
+            var ranStr = randomStringTransform(str);
+            while (ranStr === lower || ranStr === upper) {
+                ranStr = randomStringTransform(str);
+            }
+            return ranStr;
+        },
+        transformSliceMd5: function (str) {
+            return str.toLowerCase();
+        }
+    },
+];
+var retryMax = retryTransforms.length - 1;
 // 此接口测试结果如下: 错误md5->返回"errno": 31190, 正确md5+错误size->返回"errno": 2
 // 此外, 即使md5和size均正确, 连续请求时依旧有小概率返回"errno": 2, 故建议加入retry策略
-function createFileV2(file, onResponsed, onFailed, retry, isGen) {
+function rapiduploadCreateFile(file, onResponsed, onFailed, retry) {
     var _this = this;
     if (retry === void 0) { retry = 0; }
-    if (isGen === void 0) { isGen = false; }
+    var contentMd5 = retryTransforms[retry].transformContentMd5(file.md5);
+    var sliceMd5 = retryTransforms[retry].transformSliceMd5(file.md5s);
     ajax({
-        url: "" + precreate_url + (this.bdstoken ? "&bdstoken=" + this.bdstoken : ""),
+        url: "" + rapidupload_url + (this.bdstoken ? "?bdstoken=" + this.bdstoken : ""),
         method: "POST",
         responseType: "json",
         data: convertData({
-            block_list: JSON.stringify([""]),
-            path: isGen
-                ? testPath
-                : this.savePath + file.path.replace(illegalPathPattern, "_"),
-            size: file.size,
-            "content-md5": file.md5,
-            "slice-md5": file.md5s,
-            isdir: 0,
+            path: this.savePath + file.path.replace(illegalPathPattern, "_"),
+            "content-length": file.size,
+            "content-md5": contentMd5,
+            "slice-md5": sliceMd5,
             rtype: 0, // rtype=3覆盖文件, rtype=0则返回报错, 不覆盖文件, 默认为rtype=1 (自动重命名, 1和2是两种不同的重命名策略)
-            //is_revision: isGen ? 1 : 0, // is_revision=0时, rtype=3会不生效 (会依旧返回重名报错), is_revision=1时则等同rtype=3效果
         }),
+        headers: {
+            "User-Agent": "netdisk",
+        }
     }, function (data) {
         // console.log(data.response); // debug
-        if (31039 === data.response.errno && 31039 != file.errno && !isGen) {
+        if (31039 === data.response.errno && 31039 != file.errno) {
             file.errno = 31039;
             file.path = suffixChange(file.path);
-            createFileV2.call(_this, file, onResponsed, onFailed, retry, isGen);
+            rapiduploadCreateFile.call(_this, file, onResponsed, onFailed, retry);
         }
-        else if (2 === data.response.errno && retry < retryMax_apiV2) {
+        else if (404 === data.response.errno && retry < retryMax) {
             // console.log(`转存接口错误, 重试${retry + 1}次: ${file.path}`); // debug
-            createFileV2.call(_this, file, onResponsed, onFailed, ++retry, isGen);
+            rapiduploadCreateFile.call(_this, file, onResponsed, onFailed, ++retry);
         }
-        else if (2 !== data.response.return_type) {
-            onFailed(404);
+        else if (0 !== data.response.errno) {
+            onFailed(data.response.errno);
         }
         else
             onResponsed(data);
     }, onFailed);
 }
-// 此接口测试结果如下: 错误md5->返回block_list: [0], 正确md5+正确/错误size->返回block_list: []
-// 23.4.24测试发现此接口也不稳定, 有效md5也有20-30%概率返回block_list: [0], 建议加入retry策略
-// 23.4.25测试发现此接口反复横跳, 今天又全部返回block_list: [0], 垃圾, 我直接弃用
-// export function precreateFileV2(
-//   file: FileInfo,
-//   onResponsed: (data: any) => void,
-//   onFailed: (statusCode: number) => void,
-//   retry: number = 0
-// ): void {
-//   ajax(
-//     {
-//       url: `${precreate_url}${this.bdstoken && "&bdstoken=" + this.bdstoken}`, // bdstoken参数不能放在data里, 否则无效
-//       method: "POST",
-//       responseType: "json",
-//       data: convertData({
-//         block_list: JSON.stringify([file.md5.toLowerCase()]),
-//         path: this.savePath + file.path.replace(illegalPathPattern, "_"),
-//         size: file.size,
-//         isdir: 0,
-//         autoinit: 1,
-//       }),
-//     },
-//     (data) => {
-//       let _data = data.response;
-//       if (0 === _data.errno) {
-//         if (0 != _data.block_list.length && retry < retryMax_apiV2)
-//           precreateFileV2.call(this, file, onResponsed, onFailed, ++retry);
-//         else onResponsed(data);
-//       } else onResponsed(data);
-//     },
-//     onFailed
-//   );
-// }
 
 ;// CONCATENATED MODULE: ./src/baidu/common/generatebdlinkTask.tsx
 /*
@@ -6284,7 +6265,7 @@ var GeneratebdlinkTask = /** @class */ (function () {
         // 主要是因为频繁请求直链接口获取正确md5会导致#9019错误(即账号被限制), 对大批量生成秒传有很大影响, 极速生成功能使用此验证则可以节约请求以避免此问题
         // 为避免百度后面又改接口导致生成错误秒传问题, 这个接口特性我会写个定时脚本每天测试一次, 出了问题就能即使更新
         // 目前发现是通过秒传拿到的文件再生成秒传不会有这问题, 上传的文件或通过分享转存的别人上传的文件则会有
-        createFileV2.call(this, file, function (data) {
+        rapiduploadCreateFile.call(this, file, function (data) {
             data = data.response;
             if (0 === data.errno)
                 _this.checkMd5(i + 1); // md5验证成功
@@ -6372,9 +6353,9 @@ var GeneratebdlinkTask = /** @class */ (function () {
 var host = location.host;
 var listLimit = 10000;
 var syncPathPrefix = "/_pcs_.workspace";
-var retryMax_apiV2 = 4; // v2转存接口的最大重试次数
 var create_url = "https://" + host + "/api/create";
 var precreate_url = "https://" + host + "/api/precreate";
+var rapidupload_url = "https://" + host + "/api/rapidupload";
 var list_url = "https://" + host + "/rest/2.0/xpan/multimedia?method=listall&order=name&limit=" + listLimit + "&path=";
 var meta_url = "https://pcs.baidu.com/rest/2.0/pcs/file?app_id=778750&method=meta&path=";
 var meta_url2 = "https://" + host + "/api/filemetas?dlink=1&fsids=";
@@ -6651,6 +6632,44 @@ function decryptMd5(md5) {
 function suffixChange(path) {
     var suffix = path.substring(path.lastIndexOf(".") + 1); // 获取后缀
     return path.substring(0, path.length - suffix.length) + reverseStr(suffix);
+}
+/**
+ * @description: 随机大小写
+ * @param {string} str
+ * @return {string}
+ */
+function randomStringTransform(str) {
+    var tempString = [];
+    for (var _i = 0, str_1 = str; _i < str_1.length; _i++) {
+        var i = str_1[_i];
+        if (!Math.round(Math.random())) {
+            tempString.push(i.toLowerCase());
+        }
+        else {
+            tempString.push(i.toUpperCase());
+        }
+    }
+    return tempString.join("");
+}
+/**
+ * @description: 交替大小写
+ * @param {string} str
+ * @return {string}
+ */
+function alternateCaseTransform(str) {
+    var tempString = [];
+    var low = false;
+    for (var _i = 0, str_2 = str; _i < str_2.length; _i++) {
+        var i = str_2[_i];
+        if (i >= 'a' && i <= 'z' || i >= 'A' && i <= 'Z') {
+            tempString.push(low ? i.toLowerCase() : i.toUpperCase());
+            low = !low;
+        }
+        else {
+            tempString.push(i);
+        }
+    }
+    return tempString.join("");
 }
 /**
  * @description: 逆转字符串大小写

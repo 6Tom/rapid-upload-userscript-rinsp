@@ -14,9 +14,9 @@ import RapiduploadTask from "./rapiduploadTask";
 const host = location.host;
 export const listLimit = 10000;
 export const syncPathPrefix = "/_pcs_.workspace";
-export const retryMax_apiV2 = 4; // v2转存接口的最大重试次数
 export const create_url = `https://${host}/api/create`;
 export const precreate_url = `https://${host}/api/precreate`;
+export const rapidupload_url = `https://${host}/api/rapidupload`;
 export const list_url = `https://${host}/rest/2.0/xpan/multimedia?method=listall&order=name&limit=${listLimit}&path=`;
 export const meta_url = `https://pcs.baidu.com/rest/2.0/pcs/file?app_id=778750&method=meta&path=`;
 export const meta_url2 = `https://${host}/api/filemetas?dlink=1&fsids=`;

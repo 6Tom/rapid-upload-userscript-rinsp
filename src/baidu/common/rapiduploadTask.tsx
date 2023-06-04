@@ -7,13 +7,11 @@
  */
 
 import ajax from "@/common/ajax";
-import { convertData, suffixChange } from "@/common/utils";
+import { convertData, suffixChange, randomStringTransform, alternateCaseTransform } from "@/common/utils";
 import {
-  retryMax_apiV2,
-  precreate_url,
+  rapidupload_url,
   getBdstoken,
   illegalPathPattern,
-  testPath,
 } from "./const";
 export default class RapiduploadTask {
   savePath: string;
@@ -58,7 +56,7 @@ export default class RapiduploadTask {
       file.errno = statusCode;
       this.saveFileV2(i + 1);
     };
-    createFileV2.call(
+    rapiduploadCreateFile.call(
       this,
       file,
       (data: any) => {
@@ -70,111 +68,93 @@ export default class RapiduploadTask {
       },
       onFailed
     );
-    // precreateFileV2.call(
-    //   this,
-    //   file,
-    //   (data: any) => {
-    //     data = data.response;
-    //     if (0 === data.errno) {
-    //       if (0 === data.block_list.length) {
-    //         this.createFileV2(
-    //           file,
-    //           (data) => {
-    //             data = data.response;
-    //             file.errno = 2 === data.errno ? 114 : data.errno;
-    //             file.errno = 31190 === file.errno ? 404 : file.errno;
-    //             this.saveFileV2(i + 1);
-    //           },
-    //           onFailed
-    //         );
-    //       } else {
-    //         file.errno = 404;
-    //         this.saveFileV2(i + 1);
-    //       }
-    //     } else {
-    //       file.errno = data.errno;
-    //       this.saveFileV2(i + 1);
-    //     }
-    //   },
-    //   onFailed
-    // );
   }
 }
 
+const retryTransforms = [
+  {
+    transformContentMd5(str: string) {
+      return str.toUpperCase();
+    },
+    transformSliceMd5(str: string) {
+      return str.toUpperCase();
+    }
+  },
+  {
+    transformContentMd5(str: string) {
+      return str.toLowerCase();
+    },
+    transformSliceMd5(str: string) {
+      return str.toLowerCase();
+    }
+  },
+  {
+    transformContentMd5(str: string) {
+      return alternateCaseTransform(str)
+    },
+    transformSliceMd5(str: string) {
+      return str.toLowerCase();
+    }
+  },
+  {
+    transformContentMd5(str: string) {
+      const lower = str.toLowerCase();
+      const upper = str.toUpperCase();
+      if (lower === upper)
+        return str;
+      let ranStr = randomStringTransform(str);
+      while (ranStr === lower || ranStr === upper) {
+        ranStr = randomStringTransform(str);
+      }
+      return ranStr;
+    },
+    transformSliceMd5(str: string) {
+      return str.toLowerCase();
+    }
+  },
+];
+const retryMax = retryTransforms.length - 1;
+
 // 此接口测试结果如下: 错误md5->返回"errno": 31190, 正确md5+错误size->返回"errno": 2
 // 此外, 即使md5和size均正确, 连续请求时依旧有小概率返回"errno": 2, 故建议加入retry策略
-export function createFileV2(
+export function rapiduploadCreateFile(
   file: FileInfo,
   onResponsed: (data: any) => void,
   onFailed: (statusCode: number) => void,
-  retry: number = 0,
-  isGen: boolean = false
+  retry: number = 0
 ): void {
+  const contentMd5 = retryTransforms[retry].transformContentMd5(file.md5);
+  const sliceMd5 = retryTransforms[retry].transformSliceMd5(file.md5s);
+
   ajax(
     {
-      url: `${precreate_url}${this.bdstoken ? "&bdstoken=" + this.bdstoken : ""}`, // bdstoken参数不能放在data里, 否则无效
+      url: `${rapidupload_url}${this.bdstoken ? "?bdstoken=" + this.bdstoken : ""}`, // bdstoken参数不能放在data里, 否则无效
       method: "POST",
       responseType: "json",
       data: convertData({
-        block_list: JSON.stringify([""]),
-        path: isGen
-          ? testPath
-          : this.savePath + file.path.replace(illegalPathPattern, "_"),
-        size: file.size,
-        "content-md5": file.md5,
-        "slice-md5": file.md5s,
-        isdir: 0,
+        path: this.savePath + file.path.replace(illegalPathPattern, "_"),
+        "content-length": file.size,
+        "content-md5": contentMd5,
+        "slice-md5": sliceMd5,
         rtype: 0, // rtype=3覆盖文件, rtype=0则返回报错, 不覆盖文件, 默认为rtype=1 (自动重命名, 1和2是两种不同的重命名策略)
-        //is_revision: isGen ? 1 : 0, // is_revision=0时, rtype=3会不生效 (会依旧返回重名报错), is_revision=1时则等同rtype=3效果
       }),
+      headers: {
+        "User-Agent": "netdisk",
+      }
     },
     (data) => {
       // console.log(data.response); // debug
-      if (31039 === data.response.errno && 31039 != file.errno && !isGen) {
+      if (31039 === data.response.errno && 31039 != file.errno) {
         file.errno = 31039;
         file.path = suffixChange(file.path);
-        createFileV2.call(this, file, onResponsed, onFailed, retry, isGen);
-      } else if (2 === data.response.errno && retry < retryMax_apiV2) {
+        rapiduploadCreateFile.call(this, file, onResponsed, onFailed, retry);
+      } else if (404 === data.response.errno && retry < retryMax) {
         // console.log(`转存接口错误, 重试${retry + 1}次: ${file.path}`); // debug
-        createFileV2.call(this, file, onResponsed, onFailed, ++retry, isGen);
-      } else if (2 !== data.response.return_type) {
-        onFailed(404);
+        rapiduploadCreateFile.call(this, file, onResponsed, onFailed, ++retry);
+      } else if (0 !== data.response.errno) {
+        onFailed(data.response.errno);
       } else onResponsed(data);
     },
     onFailed
   );
 }
-
-// 此接口测试结果如下: 错误md5->返回block_list: [0], 正确md5+正确/错误size->返回block_list: []
-// 23.4.24测试发现此接口也不稳定, 有效md5也有20-30%概率返回block_list: [0], 建议加入retry策略
-// 23.4.25测试发现此接口反复横跳, 今天又全部返回block_list: [0], 垃圾, 我直接弃用
-// export function precreateFileV2(
-//   file: FileInfo,
-//   onResponsed: (data: any) => void,
-//   onFailed: (statusCode: number) => void,
-//   retry: number = 0
-// ): void {
-//   ajax(
-//     {
-//       url: `${precreate_url}${this.bdstoken && "&bdstoken=" + this.bdstoken}`, // bdstoken参数不能放在data里, 否则无效
-//       method: "POST",
-//       responseType: "json",
-//       data: convertData({
-//         block_list: JSON.stringify([file.md5.toLowerCase()]),
-//         path: this.savePath + file.path.replace(illegalPathPattern, "_"),
-//         size: file.size,
-//         isdir: 0,
-//         autoinit: 1,
-//       }),
-//     },
-//     (data) => {
-//       let _data = data.response;
-//       if (0 === _data.errno) {
-//         if (0 != _data.block_list.length && retry < retryMax_apiV2)
-//           precreateFileV2.call(this, file, onResponsed, onFailed, ++retry);
-//         else onResponsed(data);
-//       } else onResponsed(data);
-//     },
-//     onFailed
-//   );
-// }
