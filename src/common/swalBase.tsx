@@ -193,7 +193,7 @@ export default class Swalbase {
         GM_setValue("with_path", with_path);
         if (!with_path)
           GM_setClipboard(
-            bdlinkPrefix + parseResult.bdcode.replace(/\/.+\//g, "").toBase64()
+            bdlinkPrefix + parseResult.bdcode.replace(/0+#0+#0#.*\/(?:\n|$)/, '').replace(/\/.+\//g, "").toBase64()
           );
         // 去除目录结构, 并转换为一键秒传
         else GM_setClipboard(bdlinkPrefix + parseResult.bdcode.toBase64()); // 转换为一键秒传
@@ -210,7 +210,7 @@ export default class Swalbase {
           GM_setValue("with_path", with_path);
           if (!with_path)
             GM_setClipboard(
-              parseResult.bdcode.replace(/(#\/.+\/)|(#\/)/g, "#")
+              parseResult.bdcode.replace(/0+#0+#0#.*\/(?:\n|$)/, '').replace(/(#\/.+\/)|(#\/)/g, "#")
             );
           // 去除秒传链接中的目录结构(仅保留文件名)
           else {

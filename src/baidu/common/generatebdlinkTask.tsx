@@ -106,9 +106,19 @@ export default class GeneratebdlinkTask {
       (data) => {
         data = data.response;
         if (!data.errno) {
-          if (!data.list.length) this.scanShareFile(i + 1);
-          // 返回列表为空, 即此文件夹文件全部扫描完成
-          else {
+          if (!data.list.length) {
+            // 返回列表为空, 即此文件夹文件全部扫描完成
+            if (page === 1) {
+              this.fileInfoList.push({
+                path: this.dirList[i] + '/',
+                size: 0,
+                fs_id: '',
+                md5: '00000000000000000000000000000000',
+                md5s: '00000000000000000000000000000000',
+              });
+            }
+            this.scanShareFile(i + 1);
+          } else {
             this.parseShareFileList(data.list);
             this.scanShareFile(i, page + 1); // 下一页
           }
@@ -203,16 +213,20 @@ export default class GeneratebdlinkTask {
       this.onFinish(this.fileInfoList);
       return;
     }
-    //  刷新弹窗内的任务进度
-    this.onProcess(i, this.fileInfoList);
     let file = this.fileInfoList[i];
-    // 跳过扫描失败的目录路径
-    if (file.errno && file.isdir) {
+    if (file.fs_id === '') {
       this.generateBdlink(i + 1);
-      return;
+    } else {
+      //  刷新弹窗内的任务进度
+      this.onProcess(i, this.fileInfoList);
+      // 跳过扫描失败的目录路径
+      if (file.errno && file.isdir) {
+        this.generateBdlink(i + 1);
+        return;
+      }
+      // 普通生成步骤
+      this.isSharePage ? this.getShareDlink(i) : this.getDlink(i);
     }
-    // 普通生成步骤
-    this.isSharePage ? this.getShareDlink(i) : this.getDlink(i);
   }
 
   /**

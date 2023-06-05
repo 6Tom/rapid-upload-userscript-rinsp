@@ -58,7 +58,7 @@ DuParser.parseDu_v1 = function parseDu_v1(szUrl: string) {
       return {
         md5: info[3],
         md5s: info[4],
-        size: info[2],
+        size: Number.parseInt(info[2]),
         path: info[1],
       };
     });
@@ -82,7 +82,7 @@ DuParser.parseDu_v2 = function parseDu_v2(szUrl: string) {
       return {
         md5: info[2],
         md5s: info[3],
-        size: info[1],
+        size: Number.parseInt(info[1]),
         path: info[4],
       };
     });
@@ -145,7 +145,7 @@ DuParser.parseDu_v4 = function parseDu_v3(szUrl: string) {
         // 标准码 / 短版标准码(无md5s)
         md5: decryptMd5(info[1].toLowerCase()),
         md5s: decryptMd5(info[2].toLowerCase()),
-        size: info[3],
+        size: Number.parseInt(info[3]),
         path: info[4],
       };
     });

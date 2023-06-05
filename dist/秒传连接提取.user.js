@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name           秒传链接提取
-// @version        3.0.5
+// @version        3.0.6
 // @author         虚无
 // @description    用于提取和生成百度网盘秒传链接
 // @match          *://pan.baidu.com/disk/home*
@@ -4764,14 +4764,14 @@ if (typeof this !== 'undefined' && this.Sweetalert2){this.swal = this.sweetAlert
 /***/ 65:
 /***/ ((module) => {
 
-module.exports = ".mzf_btn{text-align:center;font-size:.85em;color:#09aaff;border:2px solid #c3eaff;border-radius:4px;margin-left:5px;padding:10px;padding-top:5px;padding-bottom:5px;cursor:pointer}.mzf_btn2{text-align:center;color:#09aaff;margin-left:5px;cursor:pointer}.mzf_link{font-family:inherit;color:#09aaff;text-decoration:none;vertical-align:baseline}.mzf_text{font-feature-settings:\"lnum\";-webkit-font-smoothing:antialiased;font-family:inherit;color:#545454;font-weight:400;word-break:break-word;-webkit-tap-highlight-color:transparent;margin:0;padding:0;width:100%;height:34px;display:block;line-height:34px;text-align:center;white-space:nowrap}.mzf_arrow{margin-right:5px;transform:rotate(180deg);transition:transform .2s;fill:none;stroke:gray}.mzf_details{cursor:pointer}.mzf_details summary{white-space:nowrap}.mzf_content{max-height:0;margin:0;transition:max-height .5s;overflow:hidden}.mzf_details[open]>summary>svg{transform:rotate(0deg)}.mzf_details[open]+.mzf_content{max-height:100%}.mzf_html_container{grid-template-columns:minmax(0, 100%);align-self:center;justify-self:center;width:32em;max-width:100%}.mzf_updateInfo{border:1px #000;width:100%;margin:0 auto}.mzf_updateInfo span{vertical-align:baseline}"
+module.exports = ".mzf_btn{text-align:center;font-size:.85em;color:#09aaff;border:2px solid #c3eaff;border-radius:4px;margin-left:5px;padding:10px;padding-top:5px;padding-bottom:5px;cursor:pointer}.mzf_btn2{text-align:center;color:#09aaff;margin-left:5px;cursor:pointer}.mzf_link{font-family:inherit;color:#09aaff;text-decoration:none;vertical-align:baseline}.mzf_text{font-feature-settings:\"lnum\";-webkit-font-smoothing:antialiased;font-family:inherit;color:#545454;font-weight:400;word-break:break-word;-webkit-tap-highlight-color:transparent;margin:0;padding:0;width:100%;height:34px;display:block;line-height:34px;text-align:center;white-space:nowrap}.mzf_arrow{margin-right:5px;transform:rotate(180deg);transition:transform .2s;fill:none;stroke:gray}.mzf_details{cursor:pointer}.mzf_details summary{white-space:nowrap}.mzf_content{max-height:0;margin:0;transition:max-height .5s;overflow:hidden}.mzf_details[open]>summary>svg{transform:rotate(0deg)}.mzf_details[open]+.mzf_content{max-height:100%}.mzf_html_container{grid-template-columns:minmax(0, 100%);align-self:center;justify-self:center;width:32em;max-width:100%}.mzf_updateInfo{border:1px #000;width:100%;margin:0 auto;text-align:left}.mzf_updateInfo span{vertical-align:baseline}"
 
 /***/ }),
 
 /***/ 184:
 /***/ ((module) => {
 
-module.exports = "<div class=\"panel-body\" style=\"height: 220px;\">\r\n  <div class=\"mzf_updateInfo\">\r\n    <p>更新日志:</p>\r\n    <p>3.0.5 提高旧秒传兼容性</p>\r\n    <p>3.0.4 没有发布</p>\r\n    <p>3.0.3 改用rapidupload接口</p>\r\n    <p>3.0.2 修正404时正确报错</p>\r\n    <p>3.0.1 拒绝短秒传输入</p>\r\n    <p>3.0.0 挽救秒传功能</p>\r\n  </div>\r\n</div>"
+module.exports = "<div class=\"panel-body\" style=\"height: 220px;\">\r\n  <div class=\"mzf_updateInfo\">\r\n    <p>更新日志:</p>\r\n    <p>3.0.6 秒传支持空目录 (文件夹结构使用时) / 增加随机大小写尝试次数</p>\r\n    <p>3.0.5 提高旧秒传兼容性</p>\r\n    <p>3.0.4 没有发布</p>\r\n    <p>3.0.3 改用rapidupload接口</p>\r\n    <p>3.0.2 修正404时正确报错</p>\r\n    <p>3.0.1 拒绝短秒传输入</p>\r\n    <p>3.0.0 挽救秒传功能</p>\r\n  </div>\r\n</div>"
 
 /***/ }),
 
@@ -4858,10 +4858,10 @@ var css_app_default = /*#__PURE__*/__webpack_require__.n(css_app);
  * @LastEditors: mengzonefire
  * @Description: 存放各种全局常量对象
  */
-var version = "3.0.5"; // 当前版本号
-var updateDate = "23.6.4"; // 更新弹窗显示的日期
-var updateInfoVer = "3.0.5"; // 更新弹窗的版本, 没必要提示的非功能性更新就不弹窗了
-var swalCssVer = "3.0.1"; // 由于其他主题的Css代码会缓存到本地, 故更新主题包版本(url)时, 需要同时更新该字段以刷新缓存
+var version = "3.0.6"; // 当前版本号
+var updateDate = "23.6.5"; // 更新弹窗显示的日期
+var updateInfoVer = "3.0.6"; // 更新弹窗的版本, 没必要提示的非功能性更新就不弹窗了
+var swalCssVer = "3.0.6"; // 由于其他主题的Css代码会缓存到本地, 故更新主题包版本(url)时, 需要同时更新该字段以刷新缓存
 var locUrl = location.href;
 var baiduNewPage = "baidu.com/disk/main"; // 匹配新版度盘界面
 var baiduSyncPage = "baidu.com/disk/synchronization"; // 匹配同步空间
@@ -4958,7 +4958,7 @@ DuParser.parseDu_v1 = function parseDu_v1(szUrl) {
         return {
             md5: info[3],
             md5s: info[4],
-            size: info[2],
+            size: Number.parseInt(info[2]),
             path: info[1],
         };
     });
@@ -4979,7 +4979,7 @@ DuParser.parseDu_v2 = function parseDu_v2(szUrl) {
         return {
             md5: info[2],
             md5s: info[3],
-            size: info[1],
+            size: Number.parseInt(info[1]),
             path: info[4],
         };
     });
@@ -5029,7 +5029,7 @@ DuParser.parseDu_v4 = function parseDu_v3(szUrl) {
             // 标准码 / 短版标准码(无md5s)
             md5: decryptMd5(info[1].toLowerCase()),
             md5s: decryptMd5(info[2].toLowerCase()),
-            size: info[3],
+            size: Number.parseInt(info[3]),
             path: info[4],
         };
     });
@@ -5420,7 +5420,7 @@ var Swalbase = /** @class */ (function () {
                 var with_path = $("#swal2-checkbox")[0].checked;
                 GM_setValue("with_path", with_path);
                 if (!with_path)
-                    GM_setClipboard(bdlinkPrefix + parseResult.bdcode.replace(/\/.+\//g, "").toBase64());
+                    GM_setClipboard(bdlinkPrefix + parseResult.bdcode.replace(/0+#0+#0#.*\/(?:\n|$)/, '').replace(/\/.+\//g, "").toBase64());
                 // 去除目录结构, 并转换为一键秒传
                 else
                     GM_setClipboard(bdlinkPrefix + parseResult.bdcode.toBase64()); // 转换为一键秒传
@@ -5435,7 +5435,7 @@ var Swalbase = /** @class */ (function () {
                     var with_path = $("#swal2-checkbox")[0].checked;
                     GM_setValue("with_path", with_path);
                     if (!with_path)
-                        GM_setClipboard(parseResult.bdcode.replace(/(#\/.+\/)|(#\/)/g, "#"));
+                        GM_setClipboard(parseResult.bdcode.replace(/0+#0+#0#.*\/(?:\n|$)/, '').replace(/(#\/.+\/)|(#\/)/g, "#"));
                     // 去除秒传链接中的目录结构(仅保留文件名)
                     else {
                         var pathType = GM_getValue("pathType") === undefined
@@ -5732,6 +5732,7 @@ var spark_md5_default = /*#__PURE__*/__webpack_require__.n(spark_md5);
 
 
 
+
 var RapiduploadTask = /** @class */ (function () {
     function RapiduploadTask() {
     }
@@ -5759,16 +5760,24 @@ var RapiduploadTask = /** @class */ (function () {
         }
         this.onProcess(i, this.fileInfoList);
         var file = this.fileInfoList[i];
+        var onFailed = function (statusCode) {
+            file.errno = statusCode;
+            _this.saveFileV2(i + 1);
+        };
+        if (file.path.endsWith("/") && file.size === 0) {
+            createDir.call(this, file.path.replace(/\/+$/, ''), function (data) {
+                data = data.response;
+                file.errno = data.errno;
+                _this.saveFileV2(i + 1);
+            }, onFailed);
+            return;
+        }
         // 文件名为空
         if (file.path === "/") {
             file.errno = -7;
             this.saveFileV2(i + 1);
             return;
         }
-        var onFailed = function (statusCode) {
-            file.errno = statusCode;
-            _this.saveFileV2(i + 1);
-        };
         rapiduploadCreateFile.call(this, file, function (data) {
             console.info(JSON.stringify(data));
             data = data.response;
@@ -5780,56 +5789,73 @@ var RapiduploadTask = /** @class */ (function () {
     return RapiduploadTask;
 }());
 /* harmony default export */ const rapiduploadTask = (RapiduploadTask);
-var retryTransforms = [
-    {
-        transformContentMd5: function (str) {
-            return str.toUpperCase();
-        },
-        transformSliceMd5: function (str) {
-            return str.toUpperCase();
+function createDir(path, onResponsed, onFailed) {
+    ajax({
+        url: "" + create_url + (this.bdstoken ? "?bdstoken=" + this.bdstoken : ""),
+        method: "POST",
+        responseType: "json",
+        data: convertData({
+            block_list: JSON.stringify([]),
+            path: this.savePath + path,
+            isdir: 1,
+            rtype: 0,
+        }),
+        headers: {
+            "User-Agent": UA,
         }
-    },
-    {
-        transformContentMd5: function (str) {
-            return str.toLowerCase();
-        },
-        transformSliceMd5: function (str) {
-            return str.toLowerCase();
+    }, function (data) {
+        if (0 !== data.response.errno) {
+            onFailed(data.response.errno);
         }
-    },
-    {
-        transformContentMd5: function (str) {
-            return alternateCaseTransform(str);
-        },
-        transformSliceMd5: function (str) {
-            return str.toLowerCase();
+        else {
+            onResponsed(data);
         }
-    },
-    {
-        transformContentMd5: function (str) {
-            var lower = str.toLowerCase();
-            var upper = str.toUpperCase();
-            if (lower === upper)
-                return str;
-            var ranStr = randomStringTransform(str);
-            while (ranStr === lower || ranStr === upper) {
-                ranStr = randomStringTransform(str);
+    }, onFailed);
+}
+var defaultRetryDelay = 200;
+var retryDelayIncrement = 100;
+var randomCaseRetryCount = 5;
+function generateRandomInt(max) {
+    return Math.floor(Math.random() * (max + 1));
+}
+function transformCase(str, mask) {
+    var next = mask;
+    return str.toLowerCase().split('').map(function (c) {
+        if (c >= 'a' && c <= 'z') {
+            if (next % 2 === 1) {
+                c = c.toUpperCase();
             }
-            return ranStr;
-        },
-        transformSliceMd5: function (str) {
-            return str.toLowerCase();
+            next = next >> 1;
         }
-    },
-];
-var retryMax = retryTransforms.length - 1;
+        return c;
+    })
+        .join('');
+}
+function rapiduploadCreateFile(file, onResponsed, onFailed) {
+    var charCount = file.md5.toLowerCase().split('').filter(function (c) { return c >= 'a' && c <= 'z'; }).length;
+    var maxCombination = 1 << charCount;
+    var attempts = [
+        0,
+        maxCombination - 1, // 大写
+    ];
+    var gen = randomCaseRetryCount;
+    while (attempts.length < maxCombination && gen > 0) {
+        var n = void 0;
+        do {
+            n = generateRandomInt(maxCombination - 1);
+        } while (attempts.includes(n));
+        attempts.push(n);
+        gen--;
+    }
+    tryRapiduploadCreateFile.call(this, file, onResponsed, onFailed, attempts, 0, defaultRetryDelay);
+}
 // 此接口测试结果如下: 错误md5->返回"errno": 31190, 正确md5+错误size->返回"errno": 2
 // 此外, 即使md5和size均正确, 连续请求时依旧有小概率返回"errno": 2, 故建议加入retry策略
-function rapiduploadCreateFile(file, onResponsed, onFailed, retry) {
+function tryRapiduploadCreateFile(file, onResponsed, onFailed, attempts, attemptIndex, retryDelay) {
     var _this = this;
-    if (retry === void 0) { retry = 0; }
-    var contentMd5 = retryTransforms[retry].transformContentMd5(file.md5);
-    var sliceMd5 = retryTransforms[retry].transformSliceMd5(file.md5s);
+    if (retryDelay === void 0) { retryDelay = 0; }
+    var contentMd5 = transformCase(file.md5, attempts[attemptIndex]);
+    var sliceMd5 = file.md5s.toLowerCase();
     ajax({
         url: "" + rapidupload_url + (this.bdstoken ? "?bdstoken=" + this.bdstoken : ""),
         method: "POST",
@@ -5842,18 +5868,20 @@ function rapiduploadCreateFile(file, onResponsed, onFailed, retry) {
             rtype: 0, // rtype=3覆盖文件, rtype=0则返回报错, 不覆盖文件, 默认为rtype=1 (自动重命名, 1和2是两种不同的重命名策略)
         }),
         headers: {
-            "User-Agent": "netdisk",
+            "User-Agent": UA,
         }
     }, function (data) {
         // console.log(data.response); // debug
         if (31039 === data.response.errno && 31039 != file.errno) {
             file.errno = 31039;
             file.path = suffixChange(file.path);
-            rapiduploadCreateFile.call(_this, file, onResponsed, onFailed, retry);
+            tryRapiduploadCreateFile.call(_this, file, onResponsed, onFailed, attempts, attemptIndex);
         }
-        else if (404 === data.response.errno && retry < retryMax) {
-            // console.log(`转存接口错误, 重试${retry + 1}次: ${file.path}`); // debug
-            rapiduploadCreateFile.call(_this, file, onResponsed, onFailed, ++retry);
+        else if (404 === data.response.errno && attempts.length > attemptIndex + 1) {
+            //console.log(`转存接口错误, 重试${retry + 1}次: ${file.path}`); // debug
+            setTimeout(function () {
+                tryRapiduploadCreateFile.call(_this, file, onResponsed, onFailed, attempts, attemptIndex + 1, retryDelay + retryDelayIncrement);
+            }, retryDelay);
         }
         else if (0 !== data.response.errno) {
             onFailed(data.response.errno);
@@ -5934,9 +5962,19 @@ var GeneratebdlinkTask = /** @class */ (function () {
         }, function (data) {
             data = data.response;
             if (!data.errno) {
-                if (!data.list.length)
+                if (!data.list.length) {
+                    // 返回列表为空, 即此文件夹文件全部扫描完成
+                    if (page === 1) {
+                        _this.fileInfoList.push({
+                            path: _this.dirList[i] + '/',
+                            size: 0,
+                            fs_id: '',
+                            md5: '00000000000000000000000000000000',
+                            md5s: '00000000000000000000000000000000',
+                        });
+                    }
                     _this.scanShareFile(i + 1);
-                // 返回列表为空, 即此文件夹文件全部扫描完成
+                }
                 else {
                     _this.parseShareFileList(data.list);
                     _this.scanShareFile(i, page + 1); // 下一页
@@ -6027,16 +6065,21 @@ var GeneratebdlinkTask = /** @class */ (function () {
             this.onFinish(this.fileInfoList);
             return;
         }
-        //  刷新弹窗内的任务进度
-        this.onProcess(i, this.fileInfoList);
         var file = this.fileInfoList[i];
-        // 跳过扫描失败的目录路径
-        if (file.errno && file.isdir) {
+        if (file.fs_id === '') {
             this.generateBdlink(i + 1);
-            return;
         }
-        // 普通生成步骤
-        this.isSharePage ? this.getShareDlink(i) : this.getDlink(i);
+        else {
+            //  刷新弹窗内的任务进度
+            this.onProcess(i, this.fileInfoList);
+            // 跳过扫描失败的目录路径
+            if (file.errno && file.isdir) {
+                this.generateBdlink(i + 1);
+                return;
+            }
+            // 普通生成步骤
+            this.isSharePage ? this.getShareDlink(i) : this.getDlink(i);
+        }
     };
     /**
      * @description: 获取文件信息: size, md5(可能错误), fs_id
