@@ -398,10 +398,7 @@ export default class Swalbase {
         return;
       }
       if (!e || typeof e.total !== "number") return; // 参数数据不正确 跳过
-      Swal.getHtmlContainer().querySelector("gen_prog").textContent = `${(
-        (e.loaded / e.total) *
-        100
-      ).toFixed()}%`;
+      Swal.getHtmlContainer().querySelector("gen_prog").textContent = `${((e.loaded / e.total) * 100).toFixed(0)}%`;
     };
 
     if (this.generatebdlinkTask.isSharePage) {

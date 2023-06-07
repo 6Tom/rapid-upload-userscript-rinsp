@@ -31,6 +31,9 @@ import {
 import SparkMD5 from "spark-md5";
 import { rapiduploadCreateFile } from "./rapiduploadTask";
 
+const listMinDelayMsec = 500;
+const retryDelaySec = 3;
+
 // 普通生成:
 export default class GeneratebdlinkTask {
   isSharePage: boolean; // 分享页标记
@@ -87,7 +90,7 @@ export default class GeneratebdlinkTask {
     }
   }
 
-  scanShareFile(i: number, page: number = 1): void {
+  scanShareFile(i: number, page: number = 1, retryAllowed: number = 3): void {
     if (i >= this.dirList.length) {
       this.generateBdlink(0);
       return;
@@ -117,10 +120,20 @@ export default class GeneratebdlinkTask {
                 md5s: '00000000000000000000000000000000',
               });
             }
-            this.scanShareFile(i + 1);
+            setTimeout(() => {
+              this.scanShareFile(i + 1);
+            }, listMinDelayMsec);
           } else {
             this.parseShareFileList(data.list);
-            this.scanShareFile(i, page + 1); // 下一页
+            if (data.list.length >= listLimit) {
+              setTimeout(() => {
+                this.scanShareFile(i, page + 1); // 下一页
+              }, listMinDelayMsec);
+            } else {
+              setTimeout(() => {
+                this.scanShareFile(i + 1);
+              }, listMinDelayMsec);
+            }
           }
         } else {
           this.fileInfoList.push({
@@ -128,15 +141,26 @@ export default class GeneratebdlinkTask {
             isdir: 1,
             errno: data.errno,
           }); // list接口访问失败, 添加失败信息
-          this.scanShareFile(i + 1);
+          setTimeout(() => {
+            this.scanShareFile(i + 1);
+          }, listMinDelayMsec);
         }
       },
       (statusCode) => {
-        this.fileInfoList.push({
-          path: this.dirList[i],
-          errno: statusCode,
-        });
-        this.scanShareFile(i + 1);
+        if (statusCode === 400 && retryAllowed > 0) { // rate limit
+          this.onProgress(false, `${retryDelaySec}秒后重试 ...`);
+          setTimeout(() => {
+            this.scanShareFile(i, page, retryAllowed - 1);
+          }, listMinDelayMsec + retryDelaySec * 1000);
+        } else {
+          this.fileInfoList.push({
+            path: this.dirList[i],
+            errno: statusCode,
+          });
+          setTimeout(() => {
+            this.scanShareFile(i + 1);
+          }, listMinDelayMsec);
+        }
       }
     );
   }
@@ -146,7 +170,7 @@ export default class GeneratebdlinkTask {
    * @param {number} i 条目index
    * @param {number} start 列表接口检索起点(即翻页参数)
    */
-  scanFile(i: number, start: number = 0): void {
+  scanFile(i: number, start: number = 0, retryAllowed: number = 3): void {
     if (i >= this.dirList.length) {
       this.generateBdlink(0);
       return;
@@ -162,9 +186,21 @@ export default class GeneratebdlinkTask {
       (data) => {
         data = data.response;
         if (!data.errno) {
-          if (!data.list.length)
-            this.scanFile(i + 1); // 返回列表为空, 即此文件夹文件全部扫描完成
-          else {
+          if (!data.list.length) {
+            // 返回列表为空, 即此文件夹文件全部扫描完成
+            if (start === 0) {
+              this.fileInfoList.push({
+                path: this.dirList[i] + '/',
+                size: 0,
+                fs_id: '',
+                md5: '00000000000000000000000000000000',
+                md5s: '00000000000000000000000000000000',
+              });
+            }
+            setTimeout(() => {
+              this.scanFile(i + 1);
+            }, listMinDelayMsec);
+          } else {
             data.list.forEach((item: any) => {
               if (!item.isdir) {
                 this.fileInfoList.push({
@@ -176,7 +212,15 @@ export default class GeneratebdlinkTask {
                 }); // 筛选文件(isdir=0)
               }
             });
-            this.scanFile(i, start + listLimit); // 从下一个起点继续检索列表
+            if (data.has_more) {
+              setTimeout(() => {
+                this.scanFile(i, start + listLimit); // 从下一个起点继续检索列表
+              }, listMinDelayMsec);
+            } else {
+              setTimeout(() => {
+                this.scanFile(i + 1);
+              }, listMinDelayMsec);
+            }
           }
         } else {
           this.fileInfoList.push({
@@ -184,15 +228,22 @@ export default class GeneratebdlinkTask {
             isdir: 1,
             errno: data.errno,
           }); // list接口访问失败, 添加失败信息
-          this.scanFile(i + 1);
+          setTimeout(() => {
+            this.scanFile(i + 1);
+          }, listMinDelayMsec);
         }
       },
       (statusCode) => {
-        this.fileInfoList.push({
-          path: this.dirList[i],
-          errno: statusCode,
-        });
-        this.scanFile(i + 1);
+        if (statusCode === 400 && retryAllowed > 0) { // rate limit
+        } else {
+          this.fileInfoList.push({
+            path: this.dirList[i],
+            errno: statusCode,
+          });
+          setTimeout(() => {
+            this.scanFile(i + 1);
+          }, listMinDelayMsec);
+        }
       }
     );
   }

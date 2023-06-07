@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name           秒传链接提取
-// @version        3.0.6
+// @version        3.0.7
 // @author         虚无
 // @description    用于提取和生成百度网盘秒传链接
 // @match          *://pan.baidu.com/disk/home*
@@ -4771,7 +4771,7 @@ module.exports = ".mzf_btn{text-align:center;font-size:.85em;color:#09aaff;borde
 /***/ 184:
 /***/ ((module) => {
 
-module.exports = "<div class=\"panel-body\" style=\"height: 220px;\">\r\n  <div class=\"mzf_updateInfo\">\r\n    <p>更新日志:</p>\r\n    <p>3.0.6 秒传支持空目录 (文件夹结构使用时) / 增加随机大小写尝试次数</p>\r\n    <p>3.0.5 提高旧秒传兼容性</p>\r\n    <p>3.0.4 没有发布</p>\r\n    <p>3.0.3 改用rapidupload接口</p>\r\n    <p>3.0.2 修正404时正确报错</p>\r\n    <p>3.0.1 拒绝短秒传输入</p>\r\n    <p>3.0.0 挽救秒传功能</p>\r\n  </div>\r\n</div>"
+module.exports = "<div class=\"panel-body\" style=\"height: 220px;\">\r\n  <div class=\"mzf_updateInfo\">\r\n    <p>更新日志:</p>\r\n    <p>3.0.7</p>\r\n    <p>3.0.6 秒传支持空目录 (文件夹结构使用时) / 增加随机大小写尝试次数</p>\r\n    <p>3.0.5 提高旧秒传兼容性</p>\r\n    <p>3.0.4 没有发布</p>\r\n    <p>3.0.3 改用rapidupload接口</p>\r\n    <p>3.0.2 修正404时正确报错</p>\r\n    <p>3.0.1 拒绝短秒传输入</p>\r\n    <p>3.0.0 挽救秒传功能</p>\r\n  </div>\r\n</div>"
 
 /***/ }),
 
@@ -4858,9 +4858,9 @@ var css_app_default = /*#__PURE__*/__webpack_require__.n(css_app);
  * @LastEditors: mengzonefire
  * @Description: 存放各种全局常量对象
  */
-var version = "3.0.6"; // 当前版本号
-var updateDate = "23.6.5"; // 更新弹窗显示的日期
-var updateInfoVer = "3.0.6"; // 更新弹窗的版本, 没必要提示的非功能性更新就不弹窗了
+var version = "3.0.7"; // 当前版本号
+var updateDate = "23.6.6"; // 更新弹窗显示的日期
+var updateInfoVer = "3.0.7"; // 更新弹窗的版本, 没必要提示的非功能性更新就不弹窗了
 var swalCssVer = "3.0.6"; // 由于其他主题的Css代码会缓存到本地, 故更新主题包版本(url)时, 需要同时更新该字段以刷新缓存
 var locUrl = location.href;
 var baiduNewPage = "baidu.com/disk/main"; // 匹配新版度盘界面
@@ -5610,8 +5610,7 @@ var Swalbase = /** @class */ (function () {
             }
             if (!e || typeof e.total !== "number")
                 return; // 参数数据不正确 跳过
-            sweetalert2_all_default().getHtmlContainer().querySelector("gen_prog").textContent = ((e.loaded / e.total) *
-                100).toFixed() + "%";
+            sweetalert2_all_default().getHtmlContainer().querySelector("gen_prog").textContent = ((e.loaded / e.total) * 100).toFixed(0) + "%";
         };
         if (this.generatebdlinkTask.isSharePage) {
             this.generatebdlinkTask.onHasNoDir = function () {
@@ -5906,6 +5905,8 @@ function tryRapiduploadCreateFile(file, onResponsed, onFailed, attempts, attempt
 // import { createFileV2 } from "./rapiduploadTask";
 
 
+var listMinDelayMsec = 500;
+var retryDelaySec = 3;
 // 普通生成:
 var GeneratebdlinkTask = /** @class */ (function () {
     function GeneratebdlinkTask() {
@@ -5947,9 +5948,10 @@ var GeneratebdlinkTask = /** @class */ (function () {
                 this.onHasNoDir();
         }
     };
-    GeneratebdlinkTask.prototype.scanShareFile = function (i, page) {
+    GeneratebdlinkTask.prototype.scanShareFile = function (i, page, retryAllowed) {
         var _this = this;
         if (page === void 0) { page = 1; }
+        if (retryAllowed === void 0) { retryAllowed = 3; }
         if (i >= this.dirList.length) {
             this.generateBdlink(0);
             return;
@@ -5973,11 +5975,22 @@ var GeneratebdlinkTask = /** @class */ (function () {
                             md5s: '00000000000000000000000000000000',
                         });
                     }
-                    _this.scanShareFile(i + 1);
+                    setTimeout(function () {
+                        _this.scanShareFile(i + 1);
+                    }, listMinDelayMsec);
                 }
                 else {
                     _this.parseShareFileList(data.list);
-                    _this.scanShareFile(i, page + 1); // 下一页
+                    if (data.list.length >= listLimit) {
+                        setTimeout(function () {
+                            _this.scanShareFile(i, page + 1); // 下一页
+                        }, listMinDelayMsec);
+                    }
+                    else {
+                        setTimeout(function () {
+                            _this.scanShareFile(i + 1);
+                        }, listMinDelayMsec);
+                    }
                 }
             }
             else {
@@ -5986,14 +5999,26 @@ var GeneratebdlinkTask = /** @class */ (function () {
                     isdir: 1,
                     errno: data.errno,
                 }); // list接口访问失败, 添加失败信息
-                _this.scanShareFile(i + 1);
+                setTimeout(function () {
+                    _this.scanShareFile(i + 1);
+                }, listMinDelayMsec);
             }
         }, function (statusCode) {
-            _this.fileInfoList.push({
-                path: _this.dirList[i],
-                errno: statusCode,
-            });
-            _this.scanShareFile(i + 1);
+            if (statusCode === 400 && retryAllowed > 0) { // rate limit
+                _this.onProgress(false, retryDelaySec + "\u79D2\u540E\u91CD\u8BD5 ...");
+                setTimeout(function () {
+                    _this.scanShareFile(i, page, retryAllowed - 1);
+                }, listMinDelayMsec + retryDelaySec * 1000);
+            }
+            else {
+                _this.fileInfoList.push({
+                    path: _this.dirList[i],
+                    errno: statusCode,
+                });
+                setTimeout(function () {
+                    _this.scanShareFile(i + 1);
+                }, listMinDelayMsec);
+            }
         });
     };
     /**
@@ -6001,9 +6026,10 @@ var GeneratebdlinkTask = /** @class */ (function () {
      * @param {number} i 条目index
      * @param {number} start 列表接口检索起点(即翻页参数)
      */
-    GeneratebdlinkTask.prototype.scanFile = function (i, start) {
+    GeneratebdlinkTask.prototype.scanFile = function (i, start, retryAllowed) {
         var _this = this;
         if (start === void 0) { start = 0; }
+        if (retryAllowed === void 0) { retryAllowed = 3; }
         if (i >= this.dirList.length) {
             this.generateBdlink(0);
             return;
@@ -6016,8 +6042,21 @@ var GeneratebdlinkTask = /** @class */ (function () {
         function (data) {
             data = data.response;
             if (!data.errno) {
-                if (!data.list.length)
-                    _this.scanFile(i + 1); // 返回列表为空, 即此文件夹文件全部扫描完成
+                if (!data.list.length) {
+                    // 返回列表为空, 即此文件夹文件全部扫描完成
+                    if (start === 0) {
+                        _this.fileInfoList.push({
+                            path: _this.dirList[i] + '/',
+                            size: 0,
+                            fs_id: '',
+                            md5: '00000000000000000000000000000000',
+                            md5s: '00000000000000000000000000000000',
+                        });
+                    }
+                    setTimeout(function () {
+                        _this.scanFile(i + 1);
+                    }, listMinDelayMsec);
+                }
                 else {
                     data.list.forEach(function (item) {
                         if (!item.isdir) {
@@ -6030,7 +6069,16 @@ var GeneratebdlinkTask = /** @class */ (function () {
                             }); // 筛选文件(isdir=0)
                         }
                     });
-                    _this.scanFile(i, start + listLimit); // 从下一个起点继续检索列表
+                    if (data.has_more) {
+                        setTimeout(function () {
+                            _this.scanFile(i, start + listLimit); // 从下一个起点继续检索列表
+                        }, listMinDelayMsec);
+                    }
+                    else {
+                        setTimeout(function () {
+                            _this.scanFile(i + 1);
+                        }, listMinDelayMsec);
+                    }
                 }
             }
             else {
@@ -6039,14 +6087,22 @@ var GeneratebdlinkTask = /** @class */ (function () {
                     isdir: 1,
                     errno: data.errno,
                 }); // list接口访问失败, 添加失败信息
-                _this.scanFile(i + 1);
+                setTimeout(function () {
+                    _this.scanFile(i + 1);
+                }, listMinDelayMsec);
             }
         }, function (statusCode) {
-            _this.fileInfoList.push({
-                path: _this.dirList[i],
-                errno: statusCode,
-            });
-            _this.scanFile(i + 1);
+            if (statusCode === 400 && retryAllowed > 0) { // rate limit
+            }
+            else {
+                _this.fileInfoList.push({
+                    path: _this.dirList[i],
+                    errno: statusCode,
+                });
+                setTimeout(function () {
+                    _this.scanFile(i + 1);
+                }, listMinDelayMsec);
+            }
         });
     };
     /**
