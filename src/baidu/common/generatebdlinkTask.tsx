@@ -235,6 +235,10 @@ export default class GeneratebdlinkTask {
       },
       (statusCode) => {
         if (statusCode === 400 && retryAllowed > 0) { // rate limit
+          this.onProgress(false, `${retryDelaySec}秒后重试 ...`);
+          setTimeout(() => {
+            this.scanShareFile(i, start, retryAllowed - 1);
+          }, listMinDelayMsec + retryDelaySec * 1000);
         } else {
           this.fileInfoList.push({
             path: this.dirList[i],

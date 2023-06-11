@@ -4771,7 +4771,7 @@ module.exports = ".mzf_btn{text-align:center;font-size:.85em;color:#09aaff;borde
 /***/ 184:
 /***/ ((module) => {
 
-module.exports = "<div class=\"panel-body\" style=\"height: 220px;\">\r\n  <div class=\"mzf_updateInfo\">\r\n    <p>更新日志:</p>\r\n    <p>3.0.7</p>\r\n    <p>3.0.6 秒传支持空目录 (文件夹结构使用时) / 增加随机大小写尝试次数</p>\r\n    <p>3.0.5 提高旧秒传兼容性</p>\r\n    <p>3.0.4 没有发布</p>\r\n    <p>3.0.3 改用rapidupload接口</p>\r\n    <p>3.0.2 修正404时正确报错</p>\r\n    <p>3.0.1 拒绝短秒传输入</p>\r\n    <p>3.0.0 挽救秒传功能</p>\r\n  </div>\r\n</div>"
+module.exports = "<div class=\"panel-body\" style=\"height: 220px;\">\r\n  <div class=\"mzf_updateInfo\">\r\n    <p>更新日志:</p>\r\n    <p>3.0.7 优化秒传生成稳定性</p>\r\n    <p>3.0.6 秒传支持空目录 (文件夹结构使用时) / 增加随机大小写尝试次数</p>\r\n    <p>3.0.5 提高旧秒传兼容性</p>\r\n    <p>3.0.4 没有发布</p>\r\n    <p>3.0.3 改用rapidupload接口</p>\r\n    <p>3.0.2 修正404时正确报错</p>\r\n    <p>3.0.1 拒绝短秒传输入</p>\r\n    <p>3.0.0 挽救秒传功能</p>\r\n  </div>\r\n</div>"
 
 /***/ }),
 
@@ -6093,6 +6093,10 @@ var GeneratebdlinkTask = /** @class */ (function () {
             }
         }, function (statusCode) {
             if (statusCode === 400 && retryAllowed > 0) { // rate limit
+                _this.onProgress(false, retryDelaySec + "\u79D2\u540E\u91CD\u8BD5 ...");
+                setTimeout(function () {
+                    _this.scanShareFile(i, start, retryAllowed - 1);
+                }, listMinDelayMsec + retryDelaySec * 1000);
             }
             else {
                 _this.fileInfoList.push({
