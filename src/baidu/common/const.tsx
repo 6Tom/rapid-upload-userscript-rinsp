@@ -40,6 +40,10 @@ export var getSelectedFileList: () => any; // 获取选中的文件列表的实�
 export function setGetSelectedFileList(func: () => any) {
   getSelectedFileList = func;
 }
+export var getShareFileList: () => any;
+export function setGetShareFileList(func: () => any) {
+  getShareFileList = func;
+}
 export const swalInstance = new Swalbase(
   new RapiduploadTask(),
   new GeneratebdlinkTask()

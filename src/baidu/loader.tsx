@@ -11,6 +11,7 @@ import {
   baiduNewPage,
   baiduSyncPage,
   baiduSharePage,
+  baiduMobilePage,
   updateInfoVer,
   TAG,
   version,
@@ -21,12 +22,22 @@ import installLegacy from "./legacyPage/loader";
 import { swalInstance } from "./common/const";
 import installSync from "./syncPage/loader";
 import installShare from "./sharePage/loader";
+import installMobile from "./mobilePage/loader";
+import installMobileShare from "./mobileSharePage/loader";
+import { isMobileVer } from "../common/utils";
 
 export function loaderBaidu(): void {
   let load = () => {
     if (locUrl.includes(baiduNewPage)) installNew();
-    else if (locUrl.includes(baiduSharePage)) installShare();
+    else if (locUrl.includes(baiduSharePage)) {
+      if (isMobileVer()) {
+        installMobileShare();
+      } else {
+        installShare();
+      }
+    }
     else if (locUrl.includes(baiduSyncPage)) installSync();
+    else if (isMobileVer() && locUrl.includes(baiduMobilePage)) installMobile();
     else installLegacy();
 
     // 进入页面后的弹窗任务
@@ -85,8 +96,16 @@ export function loaderBaidu(): void {
       );
     }
   };
-
   // 绑定入口函数到dom事件
-  if (["interactive", "complete"].includes(document.readyState)) load();
-  else window.addEventListener("DOMContentLoaded", load);
+  const giveUpTime = Date.now() + 30000;
+  function tryLoad() {
+    if (["interactive", "complete"].includes(document.readyState)) {
+      load();
+    } else if (giveUpTime > Date.now()) {
+      setTimeout(tryLoad, 100);
+    } else {
+      console.warn('插件添加失败');
+    }
+  }
+  tryLoad();
 }

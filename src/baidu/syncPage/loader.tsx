@@ -9,11 +9,12 @@
 import { TAG, version } from "@/common/const";
 import {
   setGetBdstoken,
+  setGetShareFileList,
   setGetSelectedFileList,
   setRefreshList,
   swalInstance,
 } from "../common/const";
-import { getSelectedFileListNew } from "@/common/utils";
+import { getSelectedFileListNew, getShareFileList } from "@/common/utils";
 
 const htmlTagNew = "div.nd-btn-group > span";
 const htmlBtnRapidNew =
@@ -32,6 +33,7 @@ export default function installSync() {
       .querySelector(".nd-main-list, .nd-new-main-list")
       .__vue__.reloadList();
   });
+  setGetShareFileList(getShareFileList);
   setGetSelectedFileList(getSelectedFileListNew);
   setGetBdstoken(
     () =>

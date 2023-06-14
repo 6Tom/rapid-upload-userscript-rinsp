@@ -31,8 +31,8 @@ import {
 import SparkMD5 from "spark-md5";
 import { rapiduploadCreateFile } from "./rapiduploadTask";
 
-const listMinDelayMsec = 500;
-const retryDelaySec = 3;
+const listMinDelayMsec = 1000;
+const retryDelaySec = 30;
 
 // 普通生成:
 export default class GeneratebdlinkTask {
@@ -90,19 +90,17 @@ export default class GeneratebdlinkTask {
     }
   }
 
-  scanShareFile(i: number, page: number = 1, retryAllowed: number = 3): void {
+  scanShareFile(i: number, page: number = 1, retryAllowed: number = 5): void {
     if (i >= this.dirList.length) {
       this.generateBdlink(0);
       return;
     }
     this.onProgress(false, `正在获取文件列表, 第${i + 1}个`);
+    const shareid = unsafeWindow.yunData ? unsafeWindow.yunData.shareid : unsafeWindow.locals.shareid;
+    const uk = unsafeWindow.yunData ? unsafeWindow.yunData.share_uk : unsafeWindow.locals.share_uk;
     ajax(
       {
-        url: `${sharelist_url}&dir=${encodeURIComponent(
-          this.dirList[i]
-        )}&logid=${this.logid}&shareid=${unsafeWindow.yunData.shareid}&uk=${
-          unsafeWindow.yunData.share_uk
-        }&page=${page}`,
+        url: `${sharelist_url}&dir=${encodeURIComponent(this.dirList[i])}&logid=${this.logid}&shareid=${shareid}&uk=${uk}&page=${page}`,
         method: "GET",
         responseType: "json",
       },
@@ -170,7 +168,7 @@ export default class GeneratebdlinkTask {
    * @param {number} i 条目index
    * @param {number} start 列表接口检索起点(即翻页参数)
    */
-  scanFile(i: number, start: number = 0, retryAllowed: number = 3): void {
+  scanFile(i: number, start: number = 0, retryAllowed: number = 5): void {
     if (i >= this.dirList.length) {
       this.generateBdlink(0);
       return;
@@ -237,7 +235,7 @@ export default class GeneratebdlinkTask {
         if (statusCode === 400 && retryAllowed > 0) { // rate limit
           this.onProgress(false, `${retryDelaySec}秒后重试 ...`);
           setTimeout(() => {
-            this.scanShareFile(i, start, retryAllowed - 1);
+            this.scanFile(i, start, retryAllowed - 1);
           }, listMinDelayMsec + retryDelaySec * 1000);
         } else {
           this.fileInfoList.push({
@@ -369,8 +367,8 @@ export default class GeneratebdlinkTask {
             extra: getExtra(),
             logid: this.logid,
             fid_list: JSON.stringify([file.fs_id]),
-            primaryid: unsafeWindow.yunData.shareid,
-            uk: unsafeWindow.yunData.share_uk,
+            primaryid: unsafeWindow.yunData ? unsafeWindow.yunData.shareid : unsafeWindow.locals.shareid,
+            uk: unsafeWindow.yunData ? unsafeWindow.yunData.share_uk : unsafeWindow.locals.share_uk,
             product: "share",
             encrypt: 0,
           }),

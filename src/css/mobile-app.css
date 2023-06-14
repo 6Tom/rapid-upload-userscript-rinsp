@@ -1,0 +1,35 @@
+#gen_bdlink_btn {
+  display: none;
+  font-size: .28rem;
+  padding: 0.3em;
+  color: #a57406;
+}
+header[style="display: none;"] ~ #gen_bdlink_btn {
+  display: inline-block;
+  position: fixed;
+  top: 0.4em;
+  left: 3.5em;
+  z-index: 99999;
+}
+#gen_bdlink_btn.mobile-share-page {
+  display: inline-block;
+  position: fixed;
+  top: 0.7em;
+  right: 1.3em;
+  z-index: 99999;
+}
+#gen_bdlink_btn:after {
+  content: "\26A1生成";
+}
+html.swal2-shown {
+  font-size: 16px !important;
+}
+.mzf_new_btn {
+  padding: 3px 9px;
+}
+.swal2-title {
+  font-size: 1.5rem;
+}
+.mzf_updateInfo {
+  font-size: 1rem;
+}

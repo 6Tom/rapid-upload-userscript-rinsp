@@ -9,11 +9,12 @@
 import { TAG, version } from "@/common/const";
 import {
   setGetBdstoken,
+  setGetShareFileList,
   setGetSelectedFileList,
   setRefreshList,
   swalInstance,
 } from "../common/const";
-import { getSelectedFileListNew } from "@/common/utils";
+import { getSelectedFileListNew, getShareFileList } from "@/common/utils";
 
 const htmlTagNew = "div.nd-file-list-toolbar__actions"; // 新版界面秒传按钮的html父对象
 const htmlTagNew2 = "div.wp-s-agile-tool-bar__header"; // 22.5.24: 新版界面新增的一个父对象
@@ -33,6 +34,7 @@ export default function installNew() {
       .querySelector(".nd-main-list, .nd-new-main-list")
       .__vue__.reloadList();
   });
+  setGetShareFileList(getShareFileList);
   setGetSelectedFileList(getSelectedFileListNew);
   setGetBdstoken(
     () =>

@@ -243,9 +243,7 @@ function getCookie(name: string) {
 }
 
 export function getLogid() {
-  let ut = unsafeWindow.require("system-core:context/context.js")
-    .instanceForSystem.tools.baseService;
-  return ut.base64Encode(getCookie("BAIDUID"));
+  return btoa(getCookie("BAIDUID")); // BAIDUID is asciii
 }
 
 export function getSurl() {
@@ -259,4 +257,8 @@ export function getSurl() {
 export function getExtra() {
   let seKey = decodeURIComponent(getCookie("BDCLND"));
   return "{" + '"sekey":"' + seKey + '"' + "}";
+}
+
+export function isMobileVer() {
+  return document.querySelector('body > div[id="app"]') != null;
 }

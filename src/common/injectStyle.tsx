@@ -6,8 +6,9 @@
  * @Description: 样式注入模块
  */
 import appCss from "@/css/app.css";
+import mobileAppCss from "@/css/mobile-app.css";
 import appSCss from "@/css/app.scss";
-import { showAlert } from "./utils";
+import { showAlert, isMobileVer } from "./utils";
 import { extCssUrl, appError, swalCssVer } from "./const";
 import { loaderBaidu } from "../baidu/loader";
 import ajax from "./ajax";
@@ -19,11 +20,16 @@ export function injectStyle(): void {
   // 注入自定义样式
   GM_addStyle(appCss);
   GM_addStyle(appSCss);
+  if (isMobileVer()) {
+    GM_addStyle(mobileAppCss);
+  }
+  
   let swalThemes: string = GM_getValue("swalThemes") || "Default"; // sweetAlert的主题(css), 默认为Default
   if ("Default" != swalThemes) {
     let ThemesCss: string = GM_getValue(`${swalCssVer}${swalThemes}`); // 从缓存获取非默认主题的css代码
-    if (ThemesCss) GM_addStyle(ThemesCss);
-    else {
+    if (ThemesCss) {
+      GM_addStyle(ThemesCss);
+    } else {
       getThemesCss(swalThemes); // 未找到缓存, fallback到下载css代码
       return;
     }

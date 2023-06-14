@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name           秒传链接提取
-// @version        3.0.7
+// @version        3.0.9
 // @author         虚无
 // @description    用于提取和生成百度网盘秒传链接
 // @match          *://pan.baidu.com/disk/home*
@@ -15,6 +15,7 @@
 // @match          *://wangpan.baidu.com/disk/main*
 // @match          *://wangpan.baidu.com/disk/synchronization*
 // @match          *://wangpan.baidu.com/s/*
+// @match          *://pan.baidu.com/wap/home*
 // @name:en        rapidupload-userscript
 // @license        GPLv3
 // @icon           data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABBUlEQVR4AZTTJRBUURTH4TtDwXuPdPrgbhHXiksf3CPucRNScHd3d3d3uO9bKeu7b79+fun8Q17CNHyMMUqaiPE4fEyYVjjGNKnNwQ4lpgV8lManEfwfosLHEGPU1N3ZnAv4qlT+NiQ56uPWSjKBrztUSnIaB66sY1vgxgxoMXB5NbsCB9rxcB5fN2M5/16nCFxeS6YTezpzsB1Pu/C2O7/78/99eYBYHXh+gqdHObGIK4GHgevjVIt1AgAnhvE4cGe8euoHbizgYuD2RGgx8O0RpwIPRmsmJDGqcrANd3pLo/qVr03hUlcpfSwf0/vD3JwkPdPK5/zhkOz+/f1FIDv/RcnOAEjywH/DhgADAAAAAElFTkSuQmCC
@@ -40,6 +41,7 @@
 // @connect        baidupcs.com
 // @connect        cdn.jsdelivr.net
 // @connect        *
+// @require        http://libs.baidu.com/jquery/2.0.0/jquery.min.js
 // ==/UserScript==
 
 /******/ (() => { // webpackBootstrap
@@ -4771,7 +4773,7 @@ module.exports = ".mzf_btn{text-align:center;font-size:.85em;color:#09aaff;borde
 /***/ 184:
 /***/ ((module) => {
 
-module.exports = "<div class=\"panel-body\" style=\"height: 220px;\">\r\n  <div class=\"mzf_updateInfo\">\r\n    <p>更新日志:</p>\r\n    <p>3.0.7 优化秒传生成稳定性</p>\r\n    <p>3.0.6 秒传支持空目录 (文件夹结构使用时) / 增加随机大小写尝试次数</p>\r\n    <p>3.0.5 提高旧秒传兼容性</p>\r\n    <p>3.0.4 没有发布</p>\r\n    <p>3.0.3 改用rapidupload接口</p>\r\n    <p>3.0.2 修正404时正确报错</p>\r\n    <p>3.0.1 拒绝短秒传输入</p>\r\n    <p>3.0.0 挽救秒传功能</p>\r\n  </div>\r\n</div>"
+module.exports = "<div class=\"panel-body\" style=\"height: 220px;\">\r\n  <div class=\"mzf_updateInfo\">\r\n    <p>更新日志:</p>\r\n    <p>3.0.9 最低限度支持安卓版</p>\r\n    <p>3.0.8 修正生成重试时小BUG</p>\r\n    <p>3.0.7 优化秒传生成稳定性</p>\r\n    <p>3.0.6 秒传支持空目录 (文件夹结构使用时) / 增加随机大小写尝试次数</p>\r\n    <p>3.0.5 提高旧秒传兼容性</p>\r\n    <p>3.0.4 没有发布</p>\r\n    <p>3.0.3 改用rapidupload接口</p>\r\n    <p>3.0.2 修正404时正确报错</p>\r\n    <p>3.0.1 拒绝短秒传输入</p>\r\n    <p>3.0.0 挽救秒传功能</p>\r\n  </div>\r\n</div>"
 
 /***/ }),
 
@@ -4779,6 +4781,13 @@ module.exports = "<div class=\"panel-body\" style=\"height: 220px;\">\r\n  <div 
 /***/ ((module) => {
 
 module.exports = "/*自定义单选框样式*/\r\n.mzf_check {\r\n  display: inline-block;\r\n  background-color: white;\r\n  border-radius: 5px;\r\n  border: 1px solid #d3d3d3;\r\n  width: 20px;\r\n  height: 20px;\r\n  text-align: center;\r\n  vertical-align: middle;\r\n  line-height: 20px;\r\n  margin-left: 10px;\r\n}\r\n.mzf_check_ori:checked + .mzf_check {\r\n  background-color: #eee;\r\n}\r\n.mzf_check_ori:checked + .mzf_check::after {\r\n  content: \"✓\";\r\n}\r\n.mzf_check_ori {\r\n  display: none;\r\n}\r\n\r\n/*新版度盘页面的按钮样式(直接拷贝)*/\r\n.mzf_new_btn {\r\n  -webkit-text-size-adjust: 100%;\r\n  -webkit-font-smoothing: antialiased;\r\n  -webkit-tap-highlight-color: transparent;\r\n  vertical-align: middle;\r\n  font: inherit;\r\n  overflow: visible;\r\n  text-transform: none;\r\n  font-family: SFUIText, PingFangSC-Regular, Helvetica Neue, Helvetica, Arial,\r\n    sans-serif;\r\n  display: inline-block;\r\n  line-height: 1;\r\n  white-space: nowrap;\r\n  cursor: pointer;\r\n  background: #fff;\r\n  text-align: center;\r\n  box-sizing: border-box;\r\n  outline: 0;\r\n  margin: 0;\r\n  transition: 0.1s;\r\n  color: #fff;\r\n  background-color: #06a7ff;\r\n  font-weight: 700;\r\n  padding: 8px 24px;\r\n  height: 32px;\r\n  font-size: 14px;\r\n  border-radius: 16px;\r\n  border: none;\r\n  margin-left: 8px;\r\n}\r\n"
+
+/***/ }),
+
+/***/ 825:
+/***/ ((module) => {
+
+module.exports = "#gen_bdlink_btn {\r\n  display: none;\r\n  font-size: .28rem;\r\n  padding: 0.3em;\r\n  color: #a57406;\r\n}\r\nheader[style=\"display: none;\"] ~ #gen_bdlink_btn {\r\n  display: inline-block;\r\n  position: fixed;\r\n  top: 0.4em;\r\n  left: 3.5em;\r\n  z-index: 99999;\r\n}\r\n#gen_bdlink_btn.mobile-share-page {\r\n  display: inline-block;\r\n  position: fixed;\r\n  top: 0.7em;\r\n  right: 1.3em;\r\n  z-index: 99999;\r\n}\r\n#gen_bdlink_btn:after {\r\n  content: \"\\26A1生成\";\r\n}\r\nhtml.swal2-shown {\r\n  font-size: 16px !important;\r\n}\r\n.mzf_new_btn {\r\n  padding: 3px 9px;\r\n}\r\n.swal2-title {\r\n  font-size: 1.5rem;\r\n}\r\n.mzf_updateInfo {\r\n  font-size: 1rem;\r\n}"
 
 /***/ })
 
@@ -4847,6 +4856,9 @@ var __webpack_exports__ = {};
 // EXTERNAL MODULE: ./src/css/app.css
 var app = __webpack_require__(149);
 var app_default = /*#__PURE__*/__webpack_require__.n(app);
+// EXTERNAL MODULE: ./src/css/mobile-app.css
+var mobile_app = __webpack_require__(825);
+var mobile_app_default = /*#__PURE__*/__webpack_require__.n(mobile_app);
 // EXTERNAL MODULE: ./src/css/app.scss
 var css_app = __webpack_require__(65);
 var css_app_default = /*#__PURE__*/__webpack_require__.n(css_app);
@@ -4858,11 +4870,12 @@ var css_app_default = /*#__PURE__*/__webpack_require__.n(css_app);
  * @LastEditors: mengzonefire
  * @Description: 存放各种全局常量对象
  */
-var version = "3.0.7"; // 当前版本号
-var updateDate = "23.6.6"; // 更新弹窗显示的日期
-var updateInfoVer = "3.0.7"; // 更新弹窗的版本, 没必要提示的非功能性更新就不弹窗了
+var version = "3.0.9"; // 当前版本号
+var updateDate = "23.6.12"; // 更新弹窗显示的日期
+var updateInfoVer = "3.0.9"; // 更新弹窗的版本, 没必要提示的非功能性更新就不弹窗了
 var swalCssVer = "3.0.6"; // 由于其他主题的Css代码会缓存到本地, 故更新主题包版本(url)时, 需要同时更新该字段以刷新缓存
 var locUrl = location.href;
+var baiduMobilePage = "baidu.com/wap/home";
 var baiduNewPage = "baidu.com/disk/main"; // 匹配新版度盘界面
 var baiduSyncPage = "baidu.com/disk/synchronization"; // 匹配同步空间
 var baiduSharePage = "baidu.com/s/"; // 匹配分享页
@@ -5905,8 +5918,8 @@ function tryRapiduploadCreateFile(file, onResponsed, onFailed, attempts, attempt
 // import { createFileV2 } from "./rapiduploadTask";
 
 
-var listMinDelayMsec = 500;
-var retryDelaySec = 3;
+var listMinDelayMsec = 1000;
+var retryDelaySec = 30;
 // 普通生成:
 var GeneratebdlinkTask = /** @class */ (function () {
     function GeneratebdlinkTask() {
@@ -5951,14 +5964,16 @@ var GeneratebdlinkTask = /** @class */ (function () {
     GeneratebdlinkTask.prototype.scanShareFile = function (i, page, retryAllowed) {
         var _this = this;
         if (page === void 0) { page = 1; }
-        if (retryAllowed === void 0) { retryAllowed = 3; }
+        if (retryAllowed === void 0) { retryAllowed = 5; }
         if (i >= this.dirList.length) {
             this.generateBdlink(0);
             return;
         }
         this.onProgress(false, "\u6B63\u5728\u83B7\u53D6\u6587\u4EF6\u5217\u8868, \u7B2C" + (i + 1) + "\u4E2A");
+        var shareid = unsafeWindow.yunData ? unsafeWindow.yunData.shareid : unsafeWindow.locals.shareid;
+        var uk = unsafeWindow.yunData ? unsafeWindow.yunData.share_uk : unsafeWindow.locals.share_uk;
         ajax({
-            url: sharelist_url + "&dir=" + encodeURIComponent(this.dirList[i]) + "&logid=" + this.logid + "&shareid=" + unsafeWindow.yunData.shareid + "&uk=" + unsafeWindow.yunData.share_uk + "&page=" + page,
+            url: sharelist_url + "&dir=" + encodeURIComponent(this.dirList[i]) + "&logid=" + this.logid + "&shareid=" + shareid + "&uk=" + uk + "&page=" + page,
             method: "GET",
             responseType: "json",
         }, function (data) {
@@ -6029,7 +6044,7 @@ var GeneratebdlinkTask = /** @class */ (function () {
     GeneratebdlinkTask.prototype.scanFile = function (i, start, retryAllowed) {
         var _this = this;
         if (start === void 0) { start = 0; }
-        if (retryAllowed === void 0) { retryAllowed = 3; }
+        if (retryAllowed === void 0) { retryAllowed = 5; }
         if (i >= this.dirList.length) {
             this.generateBdlink(0);
             return;
@@ -6095,7 +6110,7 @@ var GeneratebdlinkTask = /** @class */ (function () {
             if (statusCode === 400 && retryAllowed > 0) { // rate limit
                 _this.onProgress(false, retryDelaySec + "\u79D2\u540E\u91CD\u8BD5 ...");
                 setTimeout(function () {
-                    _this.scanShareFile(i, start, retryAllowed - 1);
+                    _this.scanFile(i, start, retryAllowed - 1);
                 }, listMinDelayMsec + retryDelaySec * 1000);
             }
             else {
@@ -6218,8 +6233,8 @@ var GeneratebdlinkTask = /** @class */ (function () {
                     extra: getExtra(),
                     logid: this.logid,
                     fid_list: JSON.stringify([file.fs_id]),
-                    primaryid: unsafeWindow.yunData.shareid,
-                    uk: unsafeWindow.yunData.share_uk,
+                    primaryid: unsafeWindow.yunData ? unsafeWindow.yunData.shareid : unsafeWindow.locals.shareid,
+                    uk: unsafeWindow.yunData ? unsafeWindow.yunData.share_uk : unsafeWindow.locals.share_uk,
                     product: "share",
                     encrypt: 0,
                 }),
@@ -6481,6 +6496,10 @@ var getSelectedFileList; // 获取选中的文件列表的实现
 function setGetSelectedFileList(func) {
     getSelectedFileList = func;
 }
+var getShareFileList;
+function setGetShareFileList(func) {
+    getShareFileList = func;
+}
 var swalInstance = new swalBase(new rapiduploadTask(), new generatebdlinkTask());
 function baiduErrno(errno) {
     switch (errno) {
@@ -6642,7 +6661,7 @@ function parsefileInfo(fileInfoList) {
 /**
  * @description: 获取分享页的文件列表
  */
-function getShareFileList() {
+function utils_getShareFileList() {
     var bdListInstance = unsafeWindow.require("system-core:context/context.js")
         .instanceForSystem.list;
     var selectList = bdListInstance.getSelected();
@@ -6806,9 +6825,7 @@ function getCookie(name) {
     return "";
 }
 function getLogid() {
-    var ut = unsafeWindow.require("system-core:context/context.js")
-        .instanceForSystem.tools.baseService;
-    return ut.base64Encode(getCookie("BAIDUID"));
+    return btoa(getCookie("BAIDUID")); // BAIDUID is asciii
 }
 function getSurl() {
     var reg = /(s\/|surl=)([a-zA-Z0-9_-]+)/;
@@ -6820,6 +6837,9 @@ function getSurl() {
 function getExtra() {
     var seKey = decodeURIComponent(getCookie("BDCLND"));
     return "{" + '"sekey":"' + seKey + '"' + "}";
+}
+function isMobileVer() {
+    return document.querySelector('body > div[id="app"]') != null;
 }
 
 ;// CONCATENATED MODULE: ./src/baidu/newPage/loader.tsx
@@ -6850,6 +6870,7 @@ function installNew() {
             .querySelector(".nd-main-list, .nd-new-main-list")
             .__vue__.reloadList();
     });
+    setGetShareFileList(utils_getShareFileList);
     setGetSelectedFileList(getSelectedFileListNew);
     setGetBdstoken(function () {
         return document.querySelector(".nd-main-list, .nd-new-main-list").__vue__.yunData
@@ -6954,6 +6975,7 @@ function installSync() {
             .querySelector(".nd-main-list, .nd-new-main-list")
             .__vue__.reloadList();
     });
+    setGetShareFileList(utils_getShareFileList);
     setGetSelectedFileList(getSelectedFileListNew);
     setGetBdstoken(function () {
         return document.querySelector(".nd-main-list, .nd-new-main-list").__vue__.yunData
@@ -6988,12 +7010,14 @@ function syncPage_loader_addBtn() {
  */
 
 
+
 var htmlBtnGenShare = // 分享页的秒传生成按钮html元素
  '<a id="gen_bdlink_btn_sharePage" title="生成秒传" class="g-button g-button-blue-large" style="margin-right: 5px;margin-left: 5px;"> <span class="g-button-right"> <em class="icon icon-share" style="color:#ffffff" title="生成秒传"></em> <span class="text" style="width: auto;">生成秒传</span> </span> </a>';
 var htmlTagSahre = "[node-type=qrCode]";
 function installShare() {
     console.info("%s version: %s DOM方式安装", TAG, version);
     setGetBdstoken(function () { return unsafeWindow.locals.get("bdstoken"); });
+    setGetShareFileList(utils_getShareFileList);
     sharePage_loader_addBtn();
     $(document).on("click", "#gen_bdlink_btn_sharePage", function () {
         swalInstance.generatebdlinkTask.reset();
@@ -7006,6 +7030,86 @@ function sharePage_loader_addBtn() {
         $(htmlTagSahre).before(htmlBtnGenShare);
     else
         setTimeout(sharePage_loader_addBtn, 100);
+}
+
+;// CONCATENATED MODULE: ./src/baidu/mobilePage/loader.tsx
+
+
+
+var mobilePage_loader_htmlBtnRapidNew = // 新版界面秒传按钮的html元素
+ '<button id="bdlink_btn" class="mzf_new_btn"></i><span>秒传</span></button>';
+function installMobile() {
+    console.info("%s version: %s MobileVer方式安装", TAG, version);
+    swalInstance.swalGlobalArgs = {
+        heightAuto: false,
+        scrollbarPadding: false,
+    }; // 添加swal参数以防止新版界面下的body样式突变
+    setRefreshList(function () { return document.location.reload(); });
+    setGetShareFileList(utils_getShareFileList);
+    setGetSelectedFileList(function () {
+        var fileList = $('.main-container > .multifile > .file-list')[0].__vue__.allFileList;
+        return fileList.filter(function (item) { return !!item.selected; });
+    });
+    setGetBdstoken(function () { return unsafeWindow.locals.bdstoken; });
+    $(document).on("click", "#bdlink_btn", function () {
+        swalInstance.inputView();
+    }); // 绑定转存秒传按钮事件
+    $(document).on("click", "#gen_bdlink_btn", function () {
+        swalInstance.generatebdlinkTask.reset();
+        swalInstance.checkUnfinish();
+    }); // 绑定生成秒传按钮事件
+    mobilePage_loader_addBtn();
+}
+function mobilePage_loader_addBtn() {
+    // 轮询添加按钮, 防止新版页面重复init时, 将按钮覆盖
+    var target = $(".main-container > header");
+    if (target.length && !$("#bdlink_btn").length)
+        target.append(mobilePage_loader_htmlBtnRapidNew);
+    var target2 = $(".main-container");
+    if (target2.length && !$("#gen_bdlink_btn").length)
+        target2.append('<span id="gen_bdlink_btn" class="wapfont none-pointer"><span>');
+    setTimeout(mobilePage_loader_addBtn, 500);
+}
+
+;// CONCATENATED MODULE: ./src/baidu/mobileSharePage/loader.tsx
+
+
+function installMobileShare() {
+    console.info("%s version: %s MobileVer方式安装", TAG, version);
+    swalInstance.swalGlobalArgs = {
+        heightAuto: false,
+        scrollbarPadding: false,
+    }; // 添加swal参数以防止新版界面下的body样式突变
+    setRefreshList(function () { return document.location.reload(); });
+    setGetShareFileList(function () {
+        var fileList = $('.main-container > .multifile > .file-list')[0].__vue__.allFileList;
+        return Array.from(fileList).map(function (item) {
+            return Object.assign({}, item, {
+                category: item.category * 1,
+                fs_id: item.fs_id * 1,
+                isdir: item.isdir * 1,
+                local_ctime: item.local_ctime * 1,
+                local_mtime: item.local_mtime * 1,
+                server_ctime: item.server_ctime * 1,
+                server_mtime: item.server_mtime * 1,
+                size: item.size * 1,
+            });
+        });
+    });
+    setGetBdstoken(function () { return unsafeWindow.locals.bdstoken; });
+    $(document).on("click", "#gen_bdlink_btn", function () {
+        swalInstance.generatebdlinkTask.reset();
+        swalInstance.generatebdlinkTask.isSharePage = true;
+        swalInstance.checkUnfinish();
+    }); // 绑定生成秒传按钮事件
+    mobileSharePage_loader_addBtn();
+}
+function mobileSharePage_loader_addBtn() {
+    // 轮询添加按钮, 防止新版页面重复init时, 将按钮覆盖
+    var target = $(".main-container");
+    if (target.length && !$("#gen_bdlink_btn").length)
+        target.append('<span id="gen_bdlink_btn" class="wapfont none-pointer mobile-share-page"><span>');
+    setTimeout(mobileSharePage_loader_addBtn, 500);
 }
 
 ;// CONCATENATED MODULE: ./src/baidu/loader.tsx
@@ -7023,14 +7127,25 @@ function sharePage_loader_addBtn() {
 
 
 
+
+
+
 function loaderBaidu() {
     var load = function () {
         if (locUrl.includes(baiduNewPage))
             installNew();
-        else if (locUrl.includes(baiduSharePage))
-            installShare();
+        else if (locUrl.includes(baiduSharePage)) {
+            if (isMobileVer()) {
+                installMobileShare();
+            }
+            else {
+                installShare();
+            }
+        }
         else if (locUrl.includes(baiduSyncPage))
             installSync();
+        else if (isMobileVer() && locUrl.includes(baiduMobilePage))
+            installMobile();
         else
             installLegacy();
         // 进入页面后的弹窗任务
@@ -7088,10 +7203,19 @@ function loaderBaidu() {
         }
     };
     // 绑定入口函数到dom事件
-    if (["interactive", "complete"].includes(document.readyState))
-        load();
-    else
-        window.addEventListener("DOMContentLoaded", load);
+    var giveUpTime = Date.now() + 30000;
+    function tryLoad() {
+        if (["interactive", "complete"].includes(document.readyState)) {
+            load();
+        }
+        else if (giveUpTime > Date.now()) {
+            setTimeout(tryLoad, 100);
+        }
+        else {
+            console.warn('插件添加失败');
+        }
+    }
+    tryLoad();
 }
 
 ;// CONCATENATED MODULE: ./src/common/injectStyle.tsx
@@ -7108,6 +7232,7 @@ function loaderBaidu() {
 
 
 
+
 /**
  * @description: 注入脚本样式
  */
@@ -7115,11 +7240,15 @@ function injectStyle() {
     // 注入自定义样式
     GM_addStyle((app_default()));
     GM_addStyle((css_app_default()));
+    if (isMobileVer()) {
+        GM_addStyle((mobile_app_default()));
+    }
     var swalThemes = GM_getValue("swalThemes") || "Default"; // sweetAlert的主题(css), 默认为Default
     if ("Default" != swalThemes) {
         var ThemesCss = GM_getValue("" + swalCssVer + swalThemes); // 从缓存获取非默认主题的css代码
-        if (ThemesCss)
+        if (ThemesCss) {
             GM_addStyle(ThemesCss);
+        }
         else {
             getThemesCss(swalThemes); // 未找到缓存, fallback到下载css代码
             return;

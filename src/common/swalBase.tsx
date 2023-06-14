@@ -18,6 +18,7 @@ import {
 } from "./const";
 import {
   refreshList,
+  getShareFileList,
   getSelectedFileList,
   illegalPathPattern,
   syncPathPrefix,
@@ -33,7 +34,6 @@ import {
   parsefileInfo,
   parseClipboard,
   showAlert,
-  getShareFileList,
 } from "./utils";
 import Swal from "sweetalert2";
 

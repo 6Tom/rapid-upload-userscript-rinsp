@@ -103,6 +103,7 @@ module.exports = {
           "*://wangpan.baidu.com/disk/main*",
           "*://wangpan.baidu.com/disk/synchronization*",
           "*://wangpan.baidu.com/s/*",
+          "*://pan.baidu.com/wap/home*",
         ],
         grant: [
           "GM_setValue",
@@ -118,6 +119,7 @@ module.exports = {
         connect: ["baidu.com", "baidupcs.com", "cdn.jsdelivr.net", "*"],
         downloadURL: "",
         updateURL: "",
+        require: ["http://libs.baidu.com/jquery/2.0.0/jquery.min.js"]
       },
       pretty: true,
     }),
