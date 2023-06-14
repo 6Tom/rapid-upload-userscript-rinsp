@@ -128,8 +128,16 @@ export default class Swalbase {
             // 路径留空
             this.rapiduploadTask.isDefaultPath = true;
             let nowPath = location.href.match(/path=(.+?)(?:&|$)/);
-            if (nowPath) pathValue = decodeURIComponent(nowPath[1]);
-            else pathValue = "/";
+            if (nowPath) {
+              pathValue = decodeURIComponent(nowPath[1]);
+            } else {
+              nowPath = location.href.match(/\/\/pan\.baidu\.com\/wap\/home#\/dir\/(.+?)(?:&|$)/);
+              if (nowPath) {
+                pathValue = decodeURIComponent(nowPath[1]);
+              } else {
+                pathValue = "/";
+              }
+            }
           }
           if (pathValue.charAt(0) !== "/") pathValue = "/" + pathValue; // 补齐路径前缀斜杠
           if (pathValue.charAt(pathValue.length - 1) !== "/") pathValue += "/"; // 补全路径结尾的斜杠

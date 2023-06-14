@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name           百度网盘秒传链接转存及生成 永久无广告绿色版
-// @version        3.0.9
+// @version        3.1.1
 // @author         虚无
 // @description    百度网盘秒传链接转存及生成 永久无广告绿色版 支持移动端界面 -- 再次感谢初代大佬伟大贡献
 // @match          *://pan.baidu.com/disk/home*

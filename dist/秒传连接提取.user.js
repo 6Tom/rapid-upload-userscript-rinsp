@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name           百度网盘秒传链接转存及生成 永久无广告绿色版
-// @version        3.0.9
+// @version        3.1.1
 // @author         虚无
 // @description    百度网盘秒传链接转存及生成 永久无广告绿色版 支持移动端界面 -- 再次感谢初代大佬伟大贡献
 // @match          *://pan.baidu.com/disk/home*
@@ -4773,7 +4773,7 @@ module.exports = ".mzf_btn{text-align:center;font-size:.85em;color:#09aaff;borde
 /***/ 184:
 /***/ ((module) => {
 
-module.exports = "<div class=\"panel-body\" style=\"height: 220px;\">\r\n  <div class=\"mzf_updateInfo\">\r\n    <p>更新日志:</p>\r\n    <p>3.0.9 有限度支持移动端界面</p>\r\n    <p>3.0.9 提醒20G及短链不支持 (256K以内支持)</p>\r\n    <hr>\r\n    <p>3.0.8 修正生成重试时小BUG</p>\r\n    <p>3.0.7 优化秒传生成稳定性</p>\r\n    <p>3.0.6 秒传支持空目录 (文件夹结构使用时)</p>\r\n    <p>3.0.6 增加随机大小写尝试次数</p>\r\n    <p>3.0.5 提高旧秒传兼容性</p>\r\n    <p>3.0.4 没有发布</p>\r\n    <p>3.0.3 改用rapidupload接口</p>\r\n    <p>3.0.2 修正404时正确报错</p>\r\n    <p>3.0.1 拒绝短秒传输入</p>\r\n    <p>3.0.0 挽救秒传功能</p>\r\n  </div>\r\n</div>"
+module.exports = "<div class=\"panel-body\" style=\"height: 220px;\">\r\n  <div class=\"mzf_updateInfo\">\r\n    <p>更新日志:</p>\r\n    <p>3.1.1 修正移动版保存路径无效问题</p>\r\n    <hr>\r\n    <p>3.0.9 有限度支持移动端界面</p>\r\n    <p>3.0.9 提醒20G及短链不支持 (256K以内支持)</p>\r\n    <hr>\r\n    <p>3.0.8 修正生成重试时小BUG</p>\r\n    <p>3.0.7 优化秒传生成稳定性</p>\r\n    <p>3.0.6 秒传支持空目录 (文件夹结构使用时)</p>\r\n    <p>3.0.6 增加随机大小写尝试次数</p>\r\n    <p>3.0.5 提高旧秒传兼容性</p>\r\n    <p>3.0.4 没有发布</p>\r\n    <p>3.0.3 改用rapidupload接口</p>\r\n    <p>3.0.2 修正404时正确报错</p>\r\n    <p>3.0.1 拒绝短秒传输入</p>\r\n    <p>3.0.0 挽救秒传功能</p>\r\n  </div>\r\n</div>"
 
 /***/ }),
 
@@ -4870,10 +4870,10 @@ var css_app_default = /*#__PURE__*/__webpack_require__.n(css_app);
  * @LastEditors: mengzonefire
  * @Description: 存放各种全局常量对象
  */
-var version = "3.0.9"; // 当前版本号
-var updateDate = "23.6.12"; // 更新弹窗显示的日期
-var updateInfoVer = "3.0.9"; // 更新弹窗的版本, 没必要提示的非功能性更新就不弹窗了
-var swalCssVer = "3.0.6"; // 由于其他主题的Css代码会缓存到本地, 故更新主题包版本(url)时, 需要同时更新该字段以刷新缓存
+var version = "3.1.1"; // 当前版本号
+var updateDate = "23.6.14"; // 更新弹窗显示的日期
+var updateInfoVer = "3.1.1"; // 更新弹窗的版本, 没必要提示的非功能性更新就不弹窗了
+var swalCssVer = "3.1.0"; // 由于其他主题的Css代码会缓存到本地, 故更新主题包版本(url)时, 需要同时更新该字段以刷新缓存
 var locUrl = location.href;
 var baiduMobilePage = "baidu.com/wap/home";
 var baiduNewPage = "baidu.com/disk/main"; // 匹配新版度盘界面
@@ -5395,10 +5395,18 @@ var Swalbase = /** @class */ (function () {
                                         // 路径留空
                                         _this.rapiduploadTask.isDefaultPath = true;
                                         var nowPath = location.href.match(/path=(.+?)(?:&|$)/);
-                                        if (nowPath)
+                                        if (nowPath) {
                                             pathValue = decodeURIComponent(nowPath[1]);
-                                        else
-                                            pathValue = "/";
+                                        }
+                                        else {
+                                            nowPath = location.href.match(/\/\/pan\.baidu\.com\/wap\/home#\/dir\/(.+?)(?:&|$)/);
+                                            if (nowPath) {
+                                                pathValue = decodeURIComponent(nowPath[1]);
+                                            }
+                                            else {
+                                                pathValue = "/";
+                                            }
+                                        }
                                     }
                                     if (pathValue.charAt(0) !== "/")
                                         pathValue = "/" + pathValue; // 补齐路径前缀斜杠
