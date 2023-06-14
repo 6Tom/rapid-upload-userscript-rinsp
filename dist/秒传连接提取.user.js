@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name           秒传链接提取
+// @name           百度网盘秒传链接转存及生成 永久无广告绿色版
 // @version        3.0.9
 // @author         虚无
-// @description    用于提取和生成百度网盘秒传链接
+// @description    百度网盘秒传链接转存及生成 永久无广告绿色版 支持移动端界面 -- 再次感谢初代大佬伟大贡献
 // @match          *://pan.baidu.com/disk/home*
 // @match          *://pan.baidu.com/disk/main*
 // @match          *://pan.baidu.com/disk/synchronization*
@@ -16,10 +16,10 @@
 // @match          *://wangpan.baidu.com/disk/synchronization*
 // @match          *://wangpan.baidu.com/s/*
 // @match          *://pan.baidu.com/wap/home*
-// @name:en        rapidupload-userscript
+// @name:en        pan-baidu-rapidupload-toolkit
 // @license        GPLv3
 // @icon           data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABBUlEQVR4AZTTJRBUURTH4TtDwXuPdPrgbhHXiksf3CPucRNScHd3d3d3uO9bKeu7b79+fun8Q17CNHyMMUqaiPE4fEyYVjjGNKnNwQ4lpgV8lManEfwfosLHEGPU1N3ZnAv4qlT+NiQ56uPWSjKBrztUSnIaB66sY1vgxgxoMXB5NbsCB9rxcB5fN2M5/16nCFxeS6YTezpzsB1Pu/C2O7/78/99eYBYHXh+gqdHObGIK4GHgevjVIt1AgAnhvE4cGe8euoHbizgYuD2RGgx8O0RpwIPRmsmJDGqcrANd3pLo/qVr03hUlcpfSwf0/vD3JwkPdPK5/zhkOz+/f1FIDv/RcnOAEjywH/DhgADAAAAAElFTkSuQmCC
-// @namespace      sp.mengzonefire.fork
+// @namespace      sp.mengzonefire/fork/rin
 // @homepageURL    
 // @description:en input bdlink to get files or get bdlink for Baidu™ WebDisk.
 // @compatible     firefox Violentmonkey
@@ -4773,7 +4773,7 @@ module.exports = ".mzf_btn{text-align:center;font-size:.85em;color:#09aaff;borde
 /***/ 184:
 /***/ ((module) => {
 
-module.exports = "<div class=\"panel-body\" style=\"height: 220px;\">\r\n  <div class=\"mzf_updateInfo\">\r\n    <p>更新日志:</p>\r\n    <p>3.0.9 最低限度支持安卓版</p>\r\n    <p>3.0.8 修正生成重试时小BUG</p>\r\n    <p>3.0.7 优化秒传生成稳定性</p>\r\n    <p>3.0.6 秒传支持空目录 (文件夹结构使用时) / 增加随机大小写尝试次数</p>\r\n    <p>3.0.5 提高旧秒传兼容性</p>\r\n    <p>3.0.4 没有发布</p>\r\n    <p>3.0.3 改用rapidupload接口</p>\r\n    <p>3.0.2 修正404时正确报错</p>\r\n    <p>3.0.1 拒绝短秒传输入</p>\r\n    <p>3.0.0 挽救秒传功能</p>\r\n  </div>\r\n</div>"
+module.exports = "<div class=\"panel-body\" style=\"height: 220px;\">\r\n  <div class=\"mzf_updateInfo\">\r\n    <p>更新日志:</p>\r\n    <p>3.0.9 有限度支持移动端界面</p>\r\n    <p>3.0.9 提醒20G及短链不支持 (256K以内支持)</p>\r\n    <hr>\r\n    <p>3.0.8 修正生成重试时小BUG</p>\r\n    <p>3.0.7 优化秒传生成稳定性</p>\r\n    <p>3.0.6 秒传支持空目录 (文件夹结构使用时)</p>\r\n    <p>3.0.6 增加随机大小写尝试次数</p>\r\n    <p>3.0.5 提高旧秒传兼容性</p>\r\n    <p>3.0.4 没有发布</p>\r\n    <p>3.0.3 改用rapidupload接口</p>\r\n    <p>3.0.2 修正404时正确报错</p>\r\n    <p>3.0.1 拒绝短秒传输入</p>\r\n    <p>3.0.0 挽救秒传功能</p>\r\n  </div>\r\n</div>"
 
 /***/ }),
 
@@ -5027,25 +5027,50 @@ DuParser.parseDu_v3 = function parseDu_v3(szUrl) {
     return arrFiles;
 };
 DuParser.parseDu_v4 = function parseDu_v3(szUrl) {
-    return szUrl
+    var err_20g = [];
+    var err_short = [];
+    var list = szUrl
         .split("\n")
         .map(function (z) {
         return z
             .trim()
-            .match(/^([\da-f]{9}[\da-z][\da-f]{22})#([\da-f]{9}[\da-z][\da-f]{22})#([\d]{1,20})#([\s\S]+)/i); // 22.8.29新增支持第10位为g-z的加密md5, 输入后自动解密转存
+            .match(/^([\da-f]{9}[\da-z][\da-f]{22})(?:#([\da-f]{9}[\da-z][\da-f]{22}))?#([\d]{1,20})#([\s\S]+)/i); // 22.8.29新增支持第10位为g-z的加密md5, 输入后自动解密转存
     })
         .filter(function (z) {
         return z;
     })
-        .map(function (info) {
+        .map(function (info, i) {
+        var md5 = decryptMd5(info[1].toLowerCase());
+        var md5s = info[2] ? decryptMd5(info[2].toLowerCase()) : null;
+        var fs = Number.parseInt(info[3]);
+        if (md5s == null) { // 256KiB means md5s = md5
+            if (fs <= 262144) {
+                md5s = md5;
+            }
+            else {
+                err_short.push(i);
+                return null;
+            }
+        }
+        if (fs > 21474836480) { // over 20GiB not supported
+            err_20g.push(i);
+            return null;
+        }
         return {
             // 标准码 / 短版标准码(无md5s)
-            md5: decryptMd5(info[1].toLowerCase()),
-            md5s: decryptMd5(info[2].toLowerCase()),
-            size: Number.parseInt(info[3]),
+            md5: md5,
+            md5s: md5s,
+            size: fs,
             path: info[4],
         };
     });
+    if (err_short.length > 0) {
+        throw "百度不再支持秒传短链";
+    }
+    else if (err_20g.length > 0) {
+        throw "百度不再支持超过20G单的文件";
+    }
+    return list;
 };
 /**
  * 一个简单的类似于 NodeJS Buffer 的实现.
@@ -5323,8 +5348,14 @@ var Swalbase = /** @class */ (function () {
                                 inputValue = inputValue.trim();
                                 return;
                             }
-                            if (!DuParser.parse(inputValue).length) {
-                                sweetalert2_all_default().showValidationMessage("<p>\u672A\u8BC6\u522B\u5230\u6B63\u786E\u7684\u94FE\u63A5 <a href=\"" + doc2.linkTypeDoc + "\" " + linkStyle + ">\u67E5\u770B\u652F\u6301\u683C\u5F0F</a></p>");
+                            try {
+                                if (!DuParser.parse(inputValue).length) {
+                                    sweetalert2_all_default().showValidationMessage("<p>\u672A\u8BC6\u522B\u5230\u6B63\u786E\u7684\u94FE\u63A5 <a href=\"" + doc2.linkTypeDoc + "\" " + linkStyle + ">\u67E5\u770B\u652F\u6301\u683C\u5F0F</a></p>");
+                                    return false;
+                                }
+                            }
+                            catch (e) {
+                                sweetalert2_all_default().showValidationMessage("<p>" + ('' + e) + "</p>");
                                 return false;
                             }
                             if (pathValue.match(illegalPathPattern)) {
@@ -6839,7 +6870,7 @@ function getExtra() {
     return "{" + '"sekey":"' + seKey + '"' + "}";
 }
 function isMobileVer() {
-    return document.querySelector('body > div[id="app"]') != null;
+    return document.location.pathname === '/wap/home' || document.querySelector('script[src^="https://hm.baidu.com/h.js"]:not([async])') != null;
 }
 
 ;// CONCATENATED MODULE: ./src/baidu/newPage/loader.tsx
@@ -6860,7 +6891,7 @@ var htmlBtnRapidNew = // 新版界面秒传按钮的html元素
 var htmlBtnGenNew = // 新版界面秒传生成按钮的html元素
  '<button id="gen_bdlink_btn" class="mzf_new_btn"></i><span>生成秒传</span></button>';
 function installNew() {
-    console.info("%s version: %s DOM方式安装", TAG, version);
+    console.info("%s version: %s DOM方式安装 (new-ui)", TAG, version);
     swalInstance.swalGlobalArgs = {
         heightAuto: false,
         scrollbarPadding: false,
@@ -7132,8 +7163,9 @@ function mobileSharePage_loader_addBtn() {
 
 function loaderBaidu() {
     var load = function () {
-        if (locUrl.includes(baiduNewPage))
+        if (locUrl.includes(baiduNewPage)) {
             installNew();
+        }
         else if (locUrl.includes(baiduSharePage)) {
             if (isMobileVer()) {
                 installMobileShare();
@@ -7142,12 +7174,15 @@ function loaderBaidu() {
                 installShare();
             }
         }
-        else if (locUrl.includes(baiduSyncPage))
+        else if (locUrl.includes(baiduSyncPage)) {
             installSync();
-        else if (isMobileVer() && locUrl.includes(baiduMobilePage))
+        }
+        else if (isMobileVer() && locUrl.includes(baiduMobilePage)) {
             installMobile();
-        else
+        }
+        else {
             installLegacy();
+        }
         // 进入页面后的弹窗任务
         var bdlink = parseQueryLink(locUrl); // 解析url中的秒传链接
         if (bdlink) {

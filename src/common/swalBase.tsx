@@ -78,9 +78,16 @@ export default class Swalbase {
         inputValue = inputValue.trim();
         return;
       }
-      if (!DuParser.parse(inputValue).length) {
+      try {
+        if (!DuParser.parse(inputValue).length) {
+          Swal.showValidationMessage(
+            `<p>未识别到正确的链接 <a href="${doc2.linkTypeDoc}" ${linkStyle}>查看支持格式</a></p>`
+          );
+          return false;
+        }
+      } catch (e) {
         Swal.showValidationMessage(
-          `<p>未识别到正确的链接 <a href="${doc2.linkTypeDoc}" ${linkStyle}>查看支持格式</a></p>`
+          `<p>${''+e}</p>`
         );
         return false;
       }

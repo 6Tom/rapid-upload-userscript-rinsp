@@ -28,17 +28,21 @@ import { isMobileVer } from "../common/utils";
 
 export function loaderBaidu(): void {
   let load = () => {
-    if (locUrl.includes(baiduNewPage)) installNew();
-    else if (locUrl.includes(baiduSharePage)) {
+    if (locUrl.includes(baiduNewPage)) {
+      installNew();
+    } else if (locUrl.includes(baiduSharePage)) {
       if (isMobileVer()) {
         installMobileShare();
       } else {
         installShare();
       }
+    } else if (locUrl.includes(baiduSyncPage)) {
+      installSync();
+    } else if (isMobileVer() && locUrl.includes(baiduMobilePage)) {
+      installMobile();
+    } else {
+      installLegacy();
     }
-    else if (locUrl.includes(baiduSyncPage)) installSync();
-    else if (isMobileVer() && locUrl.includes(baiduMobilePage)) installMobile();
-    else installLegacy();
 
     // 进入页面后的弹窗任务
     let bdlink = parseQueryLink(locUrl); // 解析url中的秒传链接

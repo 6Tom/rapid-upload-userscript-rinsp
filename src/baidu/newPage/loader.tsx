@@ -24,7 +24,7 @@ const htmlBtnGenNew = // 新版界面秒传生成按钮的html元素
   '<button id="gen_bdlink_btn" class="mzf_new_btn"></i><span>生成秒传</span></button>';
 
 export default function installNew() {
-  console.info("%s version: %s DOM方式安装", TAG, version);
+  console.info("%s version: %s DOM方式安装 (new-ui)", TAG, version);
   swalInstance.swalGlobalArgs = {
     heightAuto: false,
     scrollbarPadding: false,

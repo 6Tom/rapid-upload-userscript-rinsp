@@ -69,13 +69,13 @@ module.exports = {
     // 生成userscript header信息
     new WebpackUserscript({
       headers: {
-        name: "秒传链接提取",
+        name: "百度网盘秒传链接转存及生成 永久无广告绿色版",
         "name:en": `[name]`,
         version: `[version]`,
         author: `[author]`,
         license: `GPLv3`,
         icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABBUlEQVR4AZTTJRBUURTH4TtDwXuPdPrgbhHXiksf3CPucRNScHd3d3d3uO9bKeu7b79+fun8Q17CNHyMMUqaiPE4fEyYVjjGNKnNwQ4lpgV8lManEfwfosLHEGPU1N3ZnAv4qlT+NiQ56uPWSjKBrztUSnIaB66sY1vgxgxoMXB5NbsCB9rxcB5fN2M5/16nCFxeS6YTezpzsB1Pu/C2O7/78/99eYBYHXh+gqdHObGIK4GHgevjVIt1AgAnhvE4cGe8euoHbizgYuD2RGgx8O0RpwIPRmsmJDGqcrANd3pLo/qVr03hUlcpfSwf0/vD3JwkPdPK5/zhkOz+/f1FIDv/RcnOAEjywH/DhgADAAAAAElFTkSuQmCC",
-        namespace: "sp.mengzonefire.fork",
+        namespace: "sp.mengzonefire/fork/rin",
         supportURL: "",
         homepageURL: `[homepage]`,
         contributionURL: "",

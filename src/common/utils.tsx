@@ -260,5 +260,5 @@ export function getExtra() {
 }
 
 export function isMobileVer() {
-  return document.querySelector('body > div[id="app"]') != null;
+  return document.location.pathname === '/wap/home' || document.querySelector('script[src^="https://hm.baidu.com/h.js"]:not([async])') != null;
 }
