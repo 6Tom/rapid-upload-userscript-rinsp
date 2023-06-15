@@ -1,8 +1,6 @@
 /*
  * @Author: mengzonefire
- * @Date: 2022-12-12 10:58:59
- * @LastEditTime: 2022-12-24 10:57:12
- * @LastEditors: mengzonefire
+ * @LastEditors: 虚无
  * @Description: 同步空间loader入口: https://pan.baidu.com/disk/synchronization#
  */
 

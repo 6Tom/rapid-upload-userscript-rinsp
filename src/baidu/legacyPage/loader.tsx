@@ -9,11 +9,12 @@
 import { TAG, version } from "@/common/const";
 import {
   setGetBdstoken,
+  setGetShareFileList,
   setGetSelectedFileList,
   setRefreshList,
   swalInstance,
 } from "../common/const";
-import { getSelectedFileListLegacy } from "@/common/utils";
+import { getSelectedFileListLegacy, getShareFileList } from "@/common/utils";
 
 const htmlTagLegacy = "div.tcuLAu"; // 旧版界面秒传按钮的html父对象
 const htmlBtnRapidLegacy = // 旧版界面秒传按钮的html元素
@@ -29,6 +30,7 @@ export default function installLegacy() {
       .require("system-core:system/baseService/message/message.js")
       .trigger("system-refresh");
   });
+  setGetShareFileList(getShareFileList);
   setGetSelectedFileList(getSelectedFileListLegacy);
   setGetBdstoken(() => unsafeWindow.locals.get("bdstoken"));
   addBtn(); // DOM添加秒传按钮

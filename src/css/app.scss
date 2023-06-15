@@ -99,6 +99,32 @@
   text-align: left;
 }
 
+.mzf_updateInfo dl {
+  display: flex;
+  flex-wrap: wrap;
+  line-height: 26px;
+}
+.mzf_updateInfo dl > dt {
+  font-family: monospace;
+  font-size: 0.9em;
+  color: #186a8c;
+  flex-basis: 3em;
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+.mzf_updateInfo dl > dt ~ dt,
+.mzf_updateInfo dl > dt ~ dt + dd {
+  margin-top: 0.3em;
+  border-top: 1px solid #CCC;
+}
+.mzf_updateInfo dl > dd {
+  flex: 1;
+}
+.mzf_updateInfo dl > dd + dd {
+  padding-left: 3em;
+  flex-basis: 100%;
+}
+
 .mzf_updateInfo span {
   vertical-align: baseline;
 }

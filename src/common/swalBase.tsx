@@ -1,8 +1,6 @@
 /*
  * @Author: mengzonefire
- * @Date: 2021-08-25 08:34:46
- * @LastEditTime: 2023-04-11 14:10:57
- * @LastEditors: mengzonefire
+ * @LastEditors: 虚无
  * @Description: 定义全套的前台弹窗逻辑, 在Swal的回调函数内调用***Task类内定义的任务代码
  */
 
@@ -188,6 +186,7 @@ export default class Swalbase {
       parseResult.htmlInfo; // 添加失败列表, 生成模式下添加顶部空行分隔
     let htmlFooter = "";
     if (htmlFooter) htmlFooter = "<br>" + htmlFooter; // 添加底部空行分隔
+    let successAny = fileInfoList.length - parseResult.failList.length > 0;
     let swalArg = {
       title: `${action}完毕 共${fileInfoList.length}个, 失败${parseResult.failList.length}个!`,
       confirmButtonText: isGen ? "复制秒传代码" : "确认",
@@ -198,9 +197,11 @@ export default class Swalbase {
       html: html + htmlFooter,
       ...(isGen && checkboxArg),
       willOpen: () => {
-        if (isGen)
+        if (isGen) {
           GM_setValue("unClose", true); // 生成模式设置结果窗口未关闭的标记
-        else this.addOpenDirBtn(); // 转存模式时添加 "打开目录" 按钮
+        } else if (successAny) {
+          this.addOpenDirBtn(); // 转存模式时添加 "打开目录" 按钮
+        }
       },
       // 秒传生成的 "复制一键秒传" 按钮回调
       preDeny: () => {

@@ -1,8 +1,6 @@
 /*
  * @Author: mengzonefire
- * @Date: 2021-08-25 01:31:01
- * @LastEditTime: 2023-05-04 18:25:19
- * @LastEditors: mengzonefire
+ * @LastEditors: 虚无
  * @Description: 百度网盘 秒传生成任务实现
  */
 

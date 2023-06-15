@@ -1,8 +1,6 @@
 /*
  * @Author: mengzonefire
- * @Date: 2021-07-23 17:32:18
- * @LastEditTime: 2023-04-19 21:51:03
- * @LastEditors: mengzonefire
+ * @LastEditors: 虚无
  * @Description: 样式注入模块
  */
 import appCss from "@/css/app.css";
@@ -25,14 +23,12 @@ export function injectStyle(): void {
   }
   
   let swalThemes: string = GM_getValue("swalThemes") || "Default"; // sweetAlert的主题(css), 默认为Default
-  if ("Default" != swalThemes) {
-    let ThemesCss: string = GM_getValue(`${swalCssVer}${swalThemes}`); // 从缓存获取非默认主题的css代码
-    if (ThemesCss) {
-      GM_addStyle(ThemesCss);
-    } else {
-      getThemesCss(swalThemes); // 未找到缓存, fallback到下载css代码
-      return;
-    }
+  let ThemesCss: string = GM_getValue(`${swalCssVer}${swalThemes}`); // 从缓存获取非默认主题的css代码
+  if (ThemesCss) {
+    GM_addStyle(ThemesCss);
+  } else {
+    getThemesCss(swalThemes); // 未找到缓存, fallback到下载css代码
+    return;
   }
   loaderBaidu();
 }

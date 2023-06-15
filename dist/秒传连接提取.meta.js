@@ -1,6 +1,6 @@
 // ==UserScript==
-// @name           百度网盘秒传链接转存及生成 永久无广告绿色版
-// @version        3.1.1
+// @name           百度网盘秒传助手 支持PC及移动端 永久无广告绿色版
+// @version        3.1.3
 // @author         虚无
 // @description    百度网盘秒传链接转存及生成 永久无广告绿色版 支持移动端界面 -- 再次感谢初代大佬伟大贡献
 // @match          *://pan.baidu.com/disk/home*
@@ -42,4 +42,7 @@
 // @connect        cdn.jsdelivr.net
 // @connect        *
 // @require        http://libs.baidu.com/jquery/2.0.0/jquery.min.js
+// @require        https://cdn.jsdelivr.net/npm/js-base64@3.7.5/base64.min.js
+// @require        https://cdn.jsdelivr.net/npm/sweetalert2@11.4.8/dist/sweetalert2.min.js
+// @require        https://cdn.jsdelivr.net/npm/spark-md5@3.0.2/spark-md5.min.js
 // ==/UserScript==

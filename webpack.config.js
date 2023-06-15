@@ -8,6 +8,11 @@ const requireFunc =
 module.exports = {
   mode: "production",
   entry: path.resolve(__dirname, "src", "app.tsx"),
+  externals: {
+    "js-base64": "Base64",
+    "sweetalert2": "Swal",
+    "spark-md5": "SparkMD5"
+  },
   externalsPresets: { node: true },
   // externals: [nodeExternals()],
   resolve: {
@@ -69,7 +74,7 @@ module.exports = {
     // 生成userscript header信息
     new WebpackUserscript({
       headers: {
-        name: "百度网盘秒传链接转存及生成 永久无广告绿色版",
+        name: "百度网盘秒传助手 支持PC及移动端 永久无广告绿色版",
         "name:en": `[name]`,
         version: `[version]`,
         author: `[author]`,
@@ -119,7 +124,12 @@ module.exports = {
         connect: ["baidu.com", "baidupcs.com", "cdn.jsdelivr.net", "*"],
         downloadURL: "",
         updateURL: "",
-        require: ["http://libs.baidu.com/jquery/2.0.0/jquery.min.js"]
+        require: [
+          "http://libs.baidu.com/jquery/2.0.0/jquery.min.js",
+          "https://cdn.jsdelivr.net/npm/js-base64@3.7.5/base64.min.js",
+          "https://cdn.jsdelivr.net/npm/sweetalert2@11.4.8/dist/sweetalert2.min.js",
+          "https://cdn.jsdelivr.net/npm/spark-md5@3.0.2/spark-md5.min.js"
+        ]
       },
       pretty: true,
     }),

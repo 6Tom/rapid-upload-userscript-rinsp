@@ -1,15 +1,13 @@
 /*
  * @Author: mengzonefire
- * @Date: 2021-07-23 17:41:28
- * @LastEditTime: 2023-05-04 18:10:24
- * @LastEditors: mengzonefire
+ * @LastEditors: 虚无
  * @Description: 存放各种全局常量对象
  */
 
-export const version = "3.1.1"; // 当前版本号
-export const updateDate = "23.6.14"; // 更新弹窗显示的日期
-export const updateInfoVer = "3.1.1"; // 更新弹窗的版本, 没必要提示的非功能性更新就不弹窗了
-export const swalCssVer = "3.1.0"; // 由于其他主题的Css代码会缓存到本地, 故更新主题包版本(url)时, 需要同时更新该字段以刷新缓存
+export const version = "3.1.3"; // 当前版本号
+export const updateDate = "23.6.15"; // 更新弹窗显示的日期
+export const updateInfoVer = "3.1.3"; // 更新弹窗的版本, 没必要提示的非功能性更新就不弹窗了
+export const swalCssVer = "3.1.3"; // 由于其他主题的Css代码会缓存到本地, 故更新主题包版本(url)时, 需要同时更新该字段以刷新缓存
 export const locUrl: string = location.href;
 export const baiduMobilePage = "baidu.com/wap/home";
 export const baiduNewPage = "baidu.com/disk/main"; // 匹配新版度盘界面
@@ -21,7 +19,7 @@ export const bdlinkPrefix = "https://pan.baidu.com/#bdlink="; // 一键秒传链
 export const commandList = ["set", "gen", "info"]; // 转存输入框内支持输入的命令
 export const UA = "netdisk;"; // 自定义User-Agent
 export const extCssUrl = {
-  Default: "",
+  Default: "https://cdn.jsdelivr.net/npm/@sweetalert2/theme-default@5/default.css",
   Dark: "https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@5/dark.min.css",
   "WordPress Admin":
     "https://cdn.jsdelivr.net/npm/@sweetalert2/theme-wordpress-admin@5/wordpress-admin.min.css",

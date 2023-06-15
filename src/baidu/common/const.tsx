@@ -1,8 +1,6 @@
 /*
  * @Author: mengzonefire
- * @Date: 2022-10-20 10:36:43
- * @LastEditTime: 2023-05-04 12:43:06
- * @LastEditors: mengzonefire
+ * @LastEditors: 虚无
  * @Description: 存放各种全局常量对象
  */
 
