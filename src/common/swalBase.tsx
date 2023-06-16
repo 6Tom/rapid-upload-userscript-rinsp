@@ -12,12 +12,10 @@ import {
   baiduSyncPage,
   bdlinkPrefix,
   commandList,
-  doc,
+  doc2,
   htmlAboutBdlink,
-  htmlReferral,
   linkStyle,
   locUrl,
-  referralVer,
 } from "./const";
 import {
   refreshList,
@@ -28,11 +26,7 @@ import {
 import GeneratebdlinkTask from "@/baidu/common/generatebdlinkTask";
 import RapiduploadTask from "@/baidu/common/rapiduploadTask";
 import {
-  donateVer,
-  feedbackVer,
   htmlDocument,
-  htmlDonate,
-  htmlFeedback,
 } from "./const";
 import { DuParser, parseQueryLink } from "./duParser";
 import { SwalConfig } from "./swalConfig";
@@ -87,7 +81,7 @@ export default class Swalbase {
       }
       if (!DuParser.parse(inputValue).length) {
         Swal.showValidationMessage(
-          `<p>未识别到正确的链接 <a href="${doc.linkTypeDoc}" ${linkStyle}>查看支持格式</a></p>`
+          `<p>未识别到正确的链接 <a href="${doc2.linkTypeDoc}" ${linkStyle}>查看支持格式</a></p>`
         );
         return false;
       }
@@ -179,11 +173,6 @@ export default class Swalbase {
       (parseResult.htmlInfo && isGen ? "<br>" : "") +
       parseResult.htmlInfo; // 添加失败列表, 生成模式下添加顶部空行分隔
     let htmlFooter = "";
-    if (!GM_getValue(`${donateVer}_kill_donate`)) htmlFooter += htmlDonate; // 添加赞助入口提示
-    if (!GM_getValue(`${feedbackVer}_kill_feedback`))
-      htmlFooter += htmlFeedback; // 添加反馈入口提示
-    if (!GM_getValue(`${referralVer}_kill_referral`))
-      htmlFooter += htmlReferral; // 添加网盘推广入口提示
     if (htmlFooter) htmlFooter = "<br>" + htmlFooter; // 添加底部空行分隔
     let swalArg = {
       title: `${action}完毕 共${fileInfoList.length}个, 失败${parseResult.failList.length}个!`,

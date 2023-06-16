@@ -20,7 +20,7 @@ export default function installShare() {
   $(document).on("click", "#gen_bdlink_btn_sharePage", () => {
     swalInstance.generatebdlinkTask.reset();
     swalInstance.generatebdlinkTask.isSharePage = true;
-    swalInstance.generatebdlinkTask.isFast = true; // 强制使用极速生成
+    swalInstance.generatebdlinkTask.isFast = false; // 强制使用极速生成
     swalInstance.genFileWork(false, false);
   }); // 绑定生成按钮事件
 }

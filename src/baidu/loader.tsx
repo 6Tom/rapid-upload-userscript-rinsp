@@ -12,11 +12,8 @@ import {
   baiduSyncPage,
   baiduSharePage,
   updateInfoVer,
-  donateVer,
-  feedbackVer,
   TAG,
   version,
-  referralVer,
 } from "@/common/const";
 import { parseQueryLink } from "@/common/duParser";
 import installNew from "./newPage/loader";
@@ -44,18 +41,6 @@ export function loaderBaidu(): void {
       });
 
     // 预先绑定好按钮事件
-    $(document).on("click", "#mzf_kill_donate", function () {
-      GM_setValue(`${donateVer}_kill_donate`, true);
-      $("#mzf_donate").remove();
-    }); // 赞助提示 "不再显示" 按钮
-    $(document).on("click", "#mzf_kill_feedback", function () {
-      GM_setValue(`${feedbackVer}_kill_feedback`, true);
-      $("#mzf_feedback").remove();
-    }); // 反馈提示 "不再显示" 按钮
-    $(document).on("click", "#mzf_kill_referral", function () {
-      GM_setValue(`${referralVer}_kill_referral`, true);
-      $("#mzf_referral").remove();
-    }); // 网盘会员推广 "不再显示" 按钮
     $(document).on("click", "#copy_fail_list", (btn) => {
       let listText = "";
       for (let item of swalInstance.parseResult.failList)

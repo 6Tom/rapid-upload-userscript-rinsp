@@ -76,9 +76,9 @@ module.exports = {
         license: `GPLv3`,
         icon: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABBUlEQVR4AZTTJRBUURTH4TtDwXuPdPrgbhHXiksf3CPucRNScHd3d3d3uO9bKeu7b79+fun8Q17CNHyMMUqaiPE4fEyYVjjGNKnNwQ4lpgV8lManEfwfosLHEGPU1N3ZnAv4qlT+NiQ56uPWSjKBrztUSnIaB66sY1vgxgxoMXB5NbsCB9rxcB5fN2M5/16nCFxeS6YTezpzsB1Pu/C2O7/78/99eYBYHXh+gqdHObGIK4GHgevjVIt1AgAnhvE4cGe8euoHbizgYuD2RGgx8O0RpwIPRmsmJDGqcrANd3pLo/qVr03hUlcpfSwf0/vD3JwkPdPK5/zhkOz+/f1FIDv/RcnOAEjywH/DhgADAAAAAElFTkSuQmCC",
         namespace: "moe.cangku.mengzonefire",
-        supportURL: `https://github.com/mengzonefire/rapid-upload-userscript/issues`,
+        supportURL: "",
         homepageURL: `[homepage]`,
-        contributionURL: "https://afdian.net/@mengzonefire",
+        contributionURL: "",
         description: `[description]`,
         "description:en":
           "input bdlink to get files or get bdlink for Baidu™ WebDisk.",
@@ -116,12 +116,8 @@ module.exports = {
         ],
         "run-at": "document-body",
         connect: ["baidu.com", "baidupcs.com", "cdn.jsdelivr.net", "*"],
-        downloadURL:
-          "https://greasyfork.org/scripts/424574/code/%E7%A7%92%E4%BC%A0%E9%93%BE%E6%8E%A5%E6%8F%90%E5%8F%96.user.js",
-        updateURL:
-          "https://greasyfork.org/scripts/424574/code/%E7%A7%92%E4%BC%A0%E9%93%BE%E6%8E%A5%E6%8F%90%E5%8F%96.user.js",
-        antifeature:
-          'referral-link 23.4.5: 加了一个百度官方的网盘会员推广 (从那里开通可使作者获得佣金), 觉得碍眼可以点 "不再显示" 永久隐藏',
+        downloadURL: "",
+        updateURL: "",
       },
       pretty: true,
     }),

@@ -1,13 +1,12 @@
 /*
  * @Author: mengzonefire
  * @Date: 2021-08-25 01:31:01
- * @LastEditTime: 2023-05-15 16:50:55
+ * @LastEditTime: 2023-05-04 18:25:19
  * @LastEditors: mengzonefire
  * @Description: 百度网盘 秒传生成任务实现
  */
 
 import ajax from "@/common/ajax";
-import { homePage } from "@/common/const";
 import {
   convertData,
   decryptMd5,
@@ -54,10 +53,7 @@ export default class GeneratebdlinkTask {
   reset(): void {
     this.isGenView = false;
     this.isSharePage = false;
-    this.isFast =
-      GM_getValue("fast-generate") === undefined
-        ? true
-        : GM_getValue("fast-generate");
+    this.isFast = false;
     this.recursive = false;
     this.savePath = "";
     this.bdstoken = getBdstoken(); // 此处bdstoken不可删除, 会在下方createFileV2方法调用
@@ -80,7 +76,7 @@ export default class GeneratebdlinkTask {
       this.surl = getSurl();
       if (!this.surl) {
         showAlert(
-          `surl获取失败: ${location.href}, 请前往脚本页反馈:\n${homePage}`
+          "surl获取失败"
         );
         return;
       }
@@ -130,7 +126,6 @@ export default class GeneratebdlinkTask {
       (statusCode) => {
         this.fileInfoList.push({
           path: this.dirList[i],
-          isdir: 1,
           errno: statusCode,
         });
         this.scanShareFile(i + 1);
@@ -186,7 +181,6 @@ export default class GeneratebdlinkTask {
       (statusCode) => {
         this.fileInfoList.push({
           path: this.dirList[i],
-          isdir: 1,
           errno: statusCode,
         });
         this.scanFile(i + 1);
@@ -421,7 +415,7 @@ export default class GeneratebdlinkTask {
     }
     // 从下载接口获取md5, 此步骤可确保获取到正确md5
     let fileMd5 = data.responseHeaders.match(/content-md5: ([\da-f]{32})/i);
-    if (fileMd5) file.md5 = fileMd5[1].toLowerCase();
+    if (fileMd5) file.md5 = fileMd5[1];
     else if (file.size <= 3900000000 && !file.retry_996 && !this.isSharePage) {
       // 默认下载接口未拿到md5, 尝试使用旧下载接口, 旧接口请求文件size大于3.9G会返回403
       // 分享页的生成任务不要调用旧接口
@@ -475,15 +469,14 @@ export default class GeneratebdlinkTask {
     // 23.4.27: 错误md5在文件上传者账号使用此接口正常转存, 在其他账号则报错#404(#31190), 导致生成秒传完全无法验证, 故弃用meta内的md5
     // 23.5.4: 发现错误md5只要改成大写, 在上传者账号就能正常返回#31190, 而正确md5则大小写都能正常转存, 故重新启用此验证过程
     // 主要是因为频繁请求直链接口获取正确md5会导致#9019错误(即账号被限制), 对大批量生成秒传有很大影响, 极速生成功能使用此验证则可以节约请求以避免此问题
-    // 23.5.15: 错误md5问题的原理: 通过网页端上传大文件(分片上传)发现, list接口的错误md5仅在上传完成后24h内有效, 且多次上传相同的文件时, 得到的错误md5也相同
-    // 故猜测此错误md5实际对应block_list(分片md5列表), 用于在服务端计算出文件完整md5前临时代替使用
+    // 为避免百度后面又改接口导致生成错误秒传问题, 这个接口特性我会写个定时脚本每天测试一次, 出了问题就能即使更新
+    // 目前发现是通过秒传拿到的文件再生成秒传不会有这问题, 上传的文件或通过分享转存的别人上传的文件则会有
     createFileV2.call(
       this,
       file,
       (data: any) => {
         data = data.response;
-        // errno=-10即网盘容量已满, 由于31190(秒传无效)的优先级高于-10, 所以验证md5时此错误可视为验证成功
-        if ([0, -10].includes(data.errno)) this.checkMd5(i + 1); // md5验证成功
+        if (0 === data.errno) this.checkMd5(i + 1); // md5验证成功
         else if (31190 === data.errno) {
           // md5验证失败, 执行普通生成, 仅在此处保存任务进度, 生成页不保存进度
           if (!this.isSharePage)
@@ -543,7 +536,7 @@ export default class GeneratebdlinkTask {
           size: item.size,
           fs_id: item.fs_id,
           md5: item.md5 && decryptMd5(item.md5.toLowerCase()),
-          md5s: "",
+          md5s: item.md5s && decryptMd5(item.md5s.toLowerCase()),
         });
     }
   }

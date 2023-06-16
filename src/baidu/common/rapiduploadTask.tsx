@@ -10,7 +10,7 @@ import ajax from "@/common/ajax";
 import { convertData, suffixChange } from "@/common/utils";
 import {
   retryMax_apiV2,
-  create_url,
+  precreate_url,
   getBdstoken,
   illegalPathPattern,
   testPath,
@@ -111,20 +111,20 @@ export function createFileV2(
 ): void {
   ajax(
     {
-      url: `${create_url}${this.bdstoken ? "&bdstoken=" + this.bdstoken : ""}`, // bdstoken参数不能放在data里, 否则无效
+      url: `${precreate_url}${this.bdstoken ? "&bdstoken=" + this.bdstoken : ""}`, // bdstoken参数不能放在data里, 否则无效
       method: "POST",
       responseType: "json",
       data: convertData({
-        block_list: JSON.stringify([
-          isGen ? file.md5.toUpperCase() : file.md5.toLowerCase(),
-        ]),
+        block_list: JSON.stringify([""]),
         path: isGen
           ? testPath
           : this.savePath + file.path.replace(illegalPathPattern, "_"),
         size: file.size,
+        "content-md5": file.md5,
+        "slice-md5": file.md5s,
         isdir: 0,
-        rtype: isGen ? 3 : 0, // rtype=3覆盖文件, rtype=0则返回报错, 不覆盖文件, 默认为rtype=1 (自动重命名, 1和2是两种不同的重命名策略)
-        is_revision: isGen ? 1 : 0, // is_revision=0时, rtype=3会不生效 (会依旧返回重名报错), is_revision=1时则等同rtype=3效果
+        rtype: 0, // rtype=3覆盖文件, rtype=0则返回报错, 不覆盖文件, 默认为rtype=1 (自动重命名, 1和2是两种不同的重命名策略)
+        //is_revision: isGen ? 1 : 0, // is_revision=0时, rtype=3会不生效 (会依旧返回重名报错), is_revision=1时则等同rtype=3效果
       }),
     },
     (data) => {
