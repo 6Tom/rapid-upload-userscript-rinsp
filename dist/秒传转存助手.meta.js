@@ -41,8 +41,8 @@
 // @connect        baidupcs.com
 // @connect        cdn.jsdelivr.net
 // @connect        *
-// @downloadURL    https://raw.githubusercontent.com/tousakasp/rapid-upload-userscript-rinsp/raw/main/dist/%E7%A7%92%E4%BC%A0%E8%BF%9E%E6%8E%A5%E6%8F%90%E5%8F%96.user.js
-// @updateURL      https://cdn.jsdelivr.net/gh/tousakasp/rapid-upload-userscript-rinsp@main/dist/%E7%A7%92%E4%BC%A0%E8%BF%9E%E6%8E%A5%E6%8F%90%E5%8F%96.user.js
+// @downloadURL    https://raw.githubusercontent.com/tousakasp/rapid-upload-userscript-rinsp/main/dist/%E7%A7%92%E4%BC%A0%E8%BD%AC%E5%AD%98%E5%8A%A9%E6%89%8B.user.js
+// @updateURL      https://cdn.jsdelivr.net/gh/tousakasp/rapid-upload-userscript-rinsp@main/dist/%E7%A7%92%E4%BC%A0%E8%BD%AC%E5%AD%98%E5%8A%A9%E6%89%8B.user.js
 // @require        https://unpkg.com/jquery@3.7.0/dist/jquery.min.js
 // @require        https://unpkg.com/js-base64@3.7.5/base64.js
 // @require        https://unpkg.com/sweetalert2@11.4.8/dist/sweetalert2.min.js
