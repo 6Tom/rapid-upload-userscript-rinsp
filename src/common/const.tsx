@@ -1,11 +1,11 @@
 /*
  * @Author: mengzonefire
- * @LastEditors: 虚无
+ * @LastEditors: tousakasp
  * @Description: 存放各种全局常量对象
  */
 
 export const version = "3.1.3"; // 当前版本号
-export const updateDate = "23.6.15"; // 更新弹窗显示的日期
+export const updateDate = "23.6.16"; // 更新弹窗显示的日期
 export const updateInfoVer = "3.1.3"; // 更新弹窗的版本, 没必要提示的非功能性更新就不弹窗了
 export const swalCssVer = "3.1.3"; // 由于其他主题的Css代码会缓存到本地, 故更新主题包版本(url)时, 需要同时更新该字段以刷新缓存
 export const locUrl: string = location.href;
@@ -13,7 +13,7 @@ export const baiduMobilePage = "baidu.com/wap/home";
 export const baiduNewPage = "baidu.com/disk/main"; // 匹配新版度盘界面
 export const baiduSyncPage = "baidu.com/disk/synchronization"; // 匹配同步空间
 export const baiduSharePage = "baidu.com/s/"; // 匹配分享页
-export const TAG = "[秒传链接提取 by 虚无]";
+export const TAG = "[秒传转存助手 mod by tousakasp]";
 export const ajaxError = 514; // 自定义ajax请求失败时的错误码(不能与http statusCode冲突)
 export const bdlinkPrefix = "https://pan.baidu.com/#bdlink="; // 一键秒传链接的前缀
 export const commandList = ["set", "gen", "info"]; // 转存输入框内支持输入的命令

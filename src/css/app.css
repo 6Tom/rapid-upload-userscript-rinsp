@@ -52,3 +52,6 @@
   border: none;
   margin-left: 8px;
 }
+#mzf-rapid-input.swal2-textarea {
+  height: 10em;
+}

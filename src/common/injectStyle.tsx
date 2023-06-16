@@ -1,6 +1,6 @@
 /*
  * @Author: mengzonefire
- * @LastEditors: 虚无
+ * @LastEditors: tousakasp
  * @Description: 样式注入模块
  */
 import appCss from "@/css/app.css";

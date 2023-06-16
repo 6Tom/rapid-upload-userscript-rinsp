@@ -1,8 +1,9 @@
 // ==UserScript==
-// @name           百度网盘秒传助手 支持PC及移动端 永久无广告绿色版
+// @name           百度网盘秒传转存助手 支持PC及移动端 永久无广告绿色版
 // @version        3.1.3
-// @author         虚无
+// @author         tousakasp
 // @description    百度网盘秒传链接转存及生成 永久无广告绿色版 支持移动端界面 -- 再次感谢初代大佬伟大贡献
+// @homepage       https://github.com/tousakasp/rapid-upload-userscript-rinsp
 // @match          *://pan.baidu.com/disk/home*
 // @match          *://pan.baidu.com/disk/main*
 // @match          *://pan.baidu.com/disk/synchronization*
@@ -16,11 +17,10 @@
 // @match          *://wangpan.baidu.com/disk/synchronization*
 // @match          *://wangpan.baidu.com/s/*
 // @match          *://pan.baidu.com/wap/home*
-// @name:en        pan-baidu-rapidupload-toolkit
 // @license        GPLv3
 // @icon           data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABBUlEQVR4AZTTJRBUURTH4TtDwXuPdPrgbhHXiksf3CPucRNScHd3d3d3uO9bKeu7b79+fun8Q17CNHyMMUqaiPE4fEyYVjjGNKnNwQ4lpgV8lManEfwfosLHEGPU1N3ZnAv4qlT+NiQ56uPWSjKBrztUSnIaB66sY1vgxgxoMXB5NbsCB9rxcB5fN2M5/16nCFxeS6YTezpzsB1Pu/C2O7/78/99eYBYHXh+gqdHObGIK4GHgevjVIt1AgAnhvE4cGe8euoHbizgYuD2RGgx8O0RpwIPRmsmJDGqcrANd3pLo/qVr03hUlcpfSwf0/vD3JwkPdPK5/zhkOz+/f1FIDv/RcnOAEjywH/DhgADAAAAAElFTkSuQmCC
-// @namespace      sp.mengzonefire/fork/rin
-// @homepageURL    
+// @namespace      com.github.tousakasp
+// @homepageURL    https://github.com/tousakasp/rapid-upload-userscript-rinsp
 // @description:en input bdlink to get files or get bdlink for Baidu™ WebDisk.
 // @compatible     firefox Violentmonkey
 // @compatible     firefox Tampermonkey
@@ -41,10 +41,12 @@
 // @connect        baidupcs.com
 // @connect        cdn.jsdelivr.net
 // @connect        *
-// @require        http://libs.baidu.com/jquery/2.0.0/jquery.min.js
-// @require        https://cdn.jsdelivr.net/npm/js-base64@3.7.5/base64.min.js
-// @require        https://cdn.jsdelivr.net/npm/sweetalert2@11.4.8/dist/sweetalert2.min.js
-// @require        https://cdn.jsdelivr.net/npm/spark-md5@3.0.2/spark-md5.min.js
+// @downloadURL    https://raw.githubusercontent.com/tousakasp/rapid-upload-userscript-rinsp/raw/main/dist/%E7%A7%92%E4%BC%A0%E8%BF%9E%E6%8E%A5%E6%8F%90%E5%8F%96.user.js
+// @updateURL      https://cdn.jsdelivr.net/gh/tousakasp/rapid-upload-userscript-rinsp@main/dist/%E7%A7%92%E4%BC%A0%E8%BF%9E%E6%8E%A5%E6%8F%90%E5%8F%96.user.js
+// @require        https://unpkg.com/jquery@3.7.0/dist/jquery.min.js
+// @require        https://unpkg.com/js-base64@3.7.5/base64.js
+// @require        https://unpkg.com/sweetalert2@11.4.8/dist/sweetalert2.min.js
+// @require        https://unpkg.com/spark-md5@3.0.2/spark-md5.min.js
 // ==/UserScript==
 
 /******/ (() => { // webpackBootstrap
@@ -60,14 +62,14 @@ module.exports = ".mzf_btn{text-align:center;font-size:.85em;color:#09aaff;borde
 /***/ 184:
 /***/ ((module) => {
 
-module.exports = "<div class=\"panel-body\" style=\"height: 220px;\">\r\n  <div class=\"mzf_updateInfo\">\r\n    <p>更新日志:</p>\r\n    <dl>\r\n      <dt>3.1.3</dt>\r\n      <dd>转存全失败时不添加打开目录按钮</dd>\r\n      <dd>外部库切换为使用CDN</dd>\r\n      <dd></dd>\r\n\r\n      <dt>3.1.2</dt>\r\n      <dd>(只改名)</dd>\r\n      <dd></dd>\r\n\r\n      <dt>3.1.1</dt>\r\n      <dd>修正移动版保存路径无效问题</dd>\r\n      <dd></dd>\r\n\r\n      <dt>3.0.9</dt>\r\n      <dd>有限度支持移动端界面</dd>\r\n      <dd>提醒20G及短链不支持 (256K以内支持)</dd>\r\n      <dd></dd>\r\n\r\n      <dt>3.0.8</dt>\r\n      <dd>修正生成重试时小BUG</dd>\r\n      <dd></dd>\r\n\r\n      <dt>3.0.7</dt>\r\n      <dd>优化秒传生成稳定性</dd>\r\n      <dd></dd>\r\n  \r\n      <dt>3.0.6</dt>\r\n      <dd>秒传支持空目录 (文件夹结构使用时)</dd>\r\n      <dd>增加随机大小写尝试次数</dd>\r\n      <dd></dd>\r\n  \r\n      <dt>3.0.5</dt>\r\n      <dd>提高旧秒传兼容性</dd>\r\n      <dd></dd>\r\n  \r\n      <dt>3.0.4</dt>\r\n      <dd>(没有发布)</dd>\r\n      <dd></dd>\r\n  \r\n      <dt>3.0.3</dt>\r\n      <dd>改用rapidupload接口</dd>\r\n      <dd></dd>\r\n  \r\n      <dt>3.0.2</dt>\r\n      <dd>3.0.2 修正404时正确报错</dd>\r\n      <dd></dd>\r\n  \r\n      <dt>3.0.1</dt>\r\n      <dd>拒绝短秒传输入</dd>\r\n      <dd></dd>\r\n  \r\n      <dt>3.0.0</dt>\r\n      <dd>挽救秒传功能</dd>\r\n      <dd></dd>\r\n    </dl>\r\n  </div>\r\n</div>"
+module.exports = "<div class=\"panel-body\" style=\"height: 220px;\">\r\n  <div class=\"mzf_updateInfo\">\r\n    <p>更新日志:</p>\r\n    <dl>\r\n      <dt>3.1.3</dt>\r\n      <dd>转存全失败时不添加打开目录按钮</dd>\r\n      <dd>github版使用jsdelivr更新频道</dd>\r\n      <dd>外部库切换为使用CDN</dd>\r\n      <dd>更正代码内元数据</dd>\r\n      <dd></dd>\r\n\r\n      <dt>3.1.2</dt>\r\n      <dd>(只改名)</dd>\r\n      <dd></dd>\r\n\r\n      <dt>3.1.1</dt>\r\n      <dd>修正移动版保存路径无效问题</dd>\r\n      <dd></dd>\r\n\r\n      <dt>3.0.9</dt>\r\n      <dd>有限度支持移动端界面</dd>\r\n      <dd>提醒20G及短链不支持 (256K以内支持)</dd>\r\n      <dd></dd>\r\n\r\n      <dt>3.0.8</dt>\r\n      <dd>修正生成重试时小BUG</dd>\r\n      <dd></dd>\r\n\r\n      <dt>3.0.7</dt>\r\n      <dd>优化秒传生成稳定性</dd>\r\n      <dd></dd>\r\n  \r\n      <dt>3.0.6</dt>\r\n      <dd>秒传支持空目录 (文件夹结构使用时)</dd>\r\n      <dd>增加随机大小写尝试次数</dd>\r\n      <dd></dd>\r\n  \r\n      <dt>3.0.5</dt>\r\n      <dd>提高旧秒传兼容性</dd>\r\n      <dd></dd>\r\n  \r\n      <dt>3.0.4</dt>\r\n      <dd>(没有发布)</dd>\r\n      <dd></dd>\r\n  \r\n      <dt>3.0.3</dt>\r\n      <dd>改用rapidupload接口</dd>\r\n      <dd></dd>\r\n  \r\n      <dt>3.0.2</dt>\r\n      <dd>3.0.2 修正404时正确报错</dd>\r\n      <dd></dd>\r\n  \r\n      <dt>3.0.1</dt>\r\n      <dd>拒绝短秒传输入</dd>\r\n      <dd></dd>\r\n  \r\n      <dt>3.0.0</dt>\r\n      <dd>挽救秒传功能</dd>\r\n      <dd></dd>\r\n    </dl>\r\n  </div>\r\n</div>"
 
 /***/ }),
 
 /***/ 149:
 /***/ ((module) => {
 
-module.exports = "/*自定义单选框样式*/\r\n.mzf_check {\r\n  display: inline-block;\r\n  background-color: white;\r\n  border-radius: 5px;\r\n  border: 1px solid #d3d3d3;\r\n  width: 20px;\r\n  height: 20px;\r\n  text-align: center;\r\n  vertical-align: middle;\r\n  line-height: 20px;\r\n  margin-left: 10px;\r\n}\r\n.mzf_check_ori:checked + .mzf_check {\r\n  background-color: #eee;\r\n}\r\n.mzf_check_ori:checked + .mzf_check::after {\r\n  content: \"✓\";\r\n}\r\n.mzf_check_ori {\r\n  display: none;\r\n}\r\n\r\n/*新版度盘页面的按钮样式(直接拷贝)*/\r\n.mzf_new_btn {\r\n  -webkit-text-size-adjust: 100%;\r\n  -webkit-font-smoothing: antialiased;\r\n  -webkit-tap-highlight-color: transparent;\r\n  vertical-align: middle;\r\n  font: inherit;\r\n  overflow: visible;\r\n  text-transform: none;\r\n  font-family: SFUIText, PingFangSC-Regular, Helvetica Neue, Helvetica, Arial,\r\n    sans-serif;\r\n  display: inline-block;\r\n  line-height: 1;\r\n  white-space: nowrap;\r\n  cursor: pointer;\r\n  background: #fff;\r\n  text-align: center;\r\n  box-sizing: border-box;\r\n  outline: 0;\r\n  margin: 0;\r\n  transition: 0.1s;\r\n  color: #fff;\r\n  background-color: #06a7ff;\r\n  font-weight: 700;\r\n  padding: 8px 24px;\r\n  height: 32px;\r\n  font-size: 14px;\r\n  border-radius: 16px;\r\n  border: none;\r\n  margin-left: 8px;\r\n}\r\n"
+module.exports = "/*自定义单选框样式*/\r\n.mzf_check {\r\n  display: inline-block;\r\n  background-color: white;\r\n  border-radius: 5px;\r\n  border: 1px solid #d3d3d3;\r\n  width: 20px;\r\n  height: 20px;\r\n  text-align: center;\r\n  vertical-align: middle;\r\n  line-height: 20px;\r\n  margin-left: 10px;\r\n}\r\n.mzf_check_ori:checked + .mzf_check {\r\n  background-color: #eee;\r\n}\r\n.mzf_check_ori:checked + .mzf_check::after {\r\n  content: \"✓\";\r\n}\r\n.mzf_check_ori {\r\n  display: none;\r\n}\r\n\r\n/*新版度盘页面的按钮样式(直接拷贝)*/\r\n.mzf_new_btn {\r\n  -webkit-text-size-adjust: 100%;\r\n  -webkit-font-smoothing: antialiased;\r\n  -webkit-tap-highlight-color: transparent;\r\n  vertical-align: middle;\r\n  font: inherit;\r\n  overflow: visible;\r\n  text-transform: none;\r\n  font-family: SFUIText, PingFangSC-Regular, Helvetica Neue, Helvetica, Arial,\r\n    sans-serif;\r\n  display: inline-block;\r\n  line-height: 1;\r\n  white-space: nowrap;\r\n  cursor: pointer;\r\n  background: #fff;\r\n  text-align: center;\r\n  box-sizing: border-box;\r\n  outline: 0;\r\n  margin: 0;\r\n  transition: 0.1s;\r\n  color: #fff;\r\n  background-color: #06a7ff;\r\n  font-weight: 700;\r\n  padding: 8px 24px;\r\n  height: 32px;\r\n  font-size: 14px;\r\n  border-radius: 16px;\r\n  border: none;\r\n  margin-left: 8px;\r\n}\r\n#mzf-rapid-input.swal2-textarea {\r\n  height: 10em;\r\n}"
 
 /***/ }),
 
@@ -152,11 +154,11 @@ var css_app_default = /*#__PURE__*/__webpack_require__.n(css_app);
 ;// CONCATENATED MODULE: ./src/common/const.tsx
 /*
  * @Author: mengzonefire
- * @LastEditors: 虚无
+ * @LastEditors: tousakasp
  * @Description: 存放各种全局常量对象
  */
 var version = "3.1.3"; // 当前版本号
-var updateDate = "23.6.15"; // 更新弹窗显示的日期
+var updateDate = "23.6.16"; // 更新弹窗显示的日期
 var updateInfoVer = "3.1.3"; // 更新弹窗的版本, 没必要提示的非功能性更新就不弹窗了
 var swalCssVer = "3.1.3"; // 由于其他主题的Css代码会缓存到本地, 故更新主题包版本(url)时, 需要同时更新该字段以刷新缓存
 var locUrl = location.href;
@@ -164,7 +166,7 @@ var baiduMobilePage = "baidu.com/wap/home";
 var baiduNewPage = "baidu.com/disk/main"; // 匹配新版度盘界面
 var baiduSyncPage = "baidu.com/disk/synchronization"; // 匹配同步空间
 var baiduSharePage = "baidu.com/s/"; // 匹配分享页
-var TAG = "[秒传链接提取 by 虚无]";
+var TAG = "[秒传转存助手 mod by tousakasp]";
 var ajaxError = 514; // 自定义ajax请求失败时的错误码(不能与http statusCode冲突)
 var bdlinkPrefix = "https://pan.baidu.com/#bdlink="; // 一键秒传链接的前缀
 var commandList = ["set", "gen", "info"]; // 转存输入框内支持输入的命令
@@ -200,7 +202,7 @@ var copySuccessList = '<a id="copy_success_list" class="mzf_btn2">复制列表</
 ;// CONCATENATED MODULE: ./src/common/duParser.tsx
 /*
  * @Author: mengzonefire
- * @LastEditors: 虚无
+ * @LastEditors: tousakasp
  * @Description: 各种解析器
  */
 
@@ -423,7 +425,7 @@ var SwalConfig = {
     inputView: {
         title: "请输入秒传&保存路径",
         showCancelButton: true,
-        html: "<textarea id=\"mzf-rapid-input\" class=\"swal2-textarea\" placeholder=\"\u00B7 \u652F\u6301\u6279\u91CF\u8F6C\u5B58\u591A\u6761\u79D2\u4F20(\u6362\u884C\u5206\u9694)\n\u00B7 \u652F\u6301PanDL/\u6E38\u4FA0/\u6807\u51C6\u7801/PCS-GO\u683C\u5F0F\n\u00B7 \u652F\u6301\u8F93\u5165\u4E00\u952E\u79D2\u4F20(\u81EA\u52A8\u8F6C\u6362\u4E3A\u666E\u901A\u79D2\u4F20)\n\u00B7 \u53EF\u5728\u8BBE\u7F6E\u9875\u5F00\u542F\u76D1\u542C\u526A\u8D34\u677F,\u81EA\u52A8\u7C98\u8D34\u79D2\u4F20\n\u00B7 \u8F93\u5165set\u8FDB\u5165\u8BBE\u7F6E\u9875,gen\u8FDB\u5165\u751F\u6210\u9875,info\u8FDB\u5165\u7248\u672C\u4FE1\u606F\u9875\" style=\"display: flex;padding: 0.4em;\"></textarea>\n    <input id=\"mzf-path-input\" class=\"swal2-input\" placeholder=\"\u4FDD\u5B58\u8DEF\u5F84, \u793A\u4F8B: /GTA5/, \u7559\u7A7A\u4FDD\u5B58\u5728\u5F53\u524D\u76EE\u5F55\" style=\"display: flex;margin-top: 10px;\">",
+        html: "<textarea id=\"mzf-rapid-input\" class=\"swal2-textarea\" placeholder=\"\u00B7 \u652F\u6301\u6279\u91CF\u8F6C\u5B58\u591A\u6761\u79D2\u4F20(\u6362\u884C\u5206\u9694)\n\u00B7 \u652F\u6301PanDL/\u6E38\u4FA0/\u6807\u51C6\u7801/PCS-GO\u683C\u5F0F\n\u00B7 \u652F\u6301\u8F93\u5165\u4E00\u952E\u79D2\u4F20(\u81EA\u52A8\u8F6C\u6362\u4E3A\u666E\u901A\u79D2\u4F20)\n\u00B7 \u53EF\u5728\u8BBE\u7F6E\u9875\u5F00\u542F\u76D1\u542C\u526A\u8D34\u677F,\u81EA\u52A8\u7C98\u8D34\u79D2\u4F20\n\u00B7 \u8F93\u5165set\u6253\u5F00\u8BBE\u7F6E, gen\u8FDB\u5165\u751F\u6210\u9875\n\u00B7 info\u663E\u793A\u7248\u672C\u4FE1\u606F\" style=\"display: flex;padding: 0.4em;\"></textarea>\n    <input id=\"mzf-path-input\" class=\"swal2-input\" placeholder=\"\u4FDD\u5B58\u8DEF\u5F84, \u793A\u4F8B: /GTA5/, \u7559\u7A7A\u4FDD\u5B58\u5728\u5F53\u524D\u76EE\u5F55\" style=\"display: flex;margin-top: 10px;\">",
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         customClass: { htmlContainer: "mzf_html_container" },
@@ -515,7 +517,7 @@ var external_Swal_default = /*#__PURE__*/__webpack_require__.n(external_Swal_nam
 ;// CONCATENATED MODULE: ./src/common/swalBase.tsx
 /*
  * @Author: mengzonefire
- * @LastEditors: 虚无
+ * @LastEditors: tousakasp
  * @Description: 定义全套的前台弹窗逻辑, 在Swal的回调函数内调用***Task类内定义的任务代码
  */
 var __assign = (undefined && undefined.__assign) || function () {
@@ -1059,7 +1061,7 @@ var external_SparkMD5_default = /*#__PURE__*/__webpack_require__.n(external_Spar
 ;// CONCATENATED MODULE: ./src/baidu/common/rapiduploadTask.tsx
 /*
  * @Author: mengzonefire
- * @LastEditors: 虚无
+ * @LastEditors: tousakasp
  * @Description: 百度网盘 秒传转存任务实现
  */
 
@@ -1227,7 +1229,7 @@ function tryRapiduploadCreateFile(file, onResponsed, onFailed, attempts, attempt
 ;// CONCATENATED MODULE: ./src/baidu/common/generatebdlinkTask.tsx
 /*
  * @Author: mengzonefire
- * @LastEditors: 虚无
+ * @LastEditors: tousakasp
  * @Description: 百度网盘 秒传生成任务实现
  */
 
@@ -1778,7 +1780,7 @@ var GeneratebdlinkTask = /** @class */ (function () {
 ;// CONCATENATED MODULE: ./src/baidu/common/const.tsx
 /*
  * @Author: mengzonefire
- * @LastEditors: 虚无
+ * @LastEditors: tousakasp
  * @Description: 存放各种全局常量对象
  */
 
@@ -1871,7 +1873,7 @@ function baiduErrno(errno) {
 ;// CONCATENATED MODULE: ./src/common/utils.tsx
 /*
  * @Author: mengzonefire
- * @LastEditors: 虚无
+ * @LastEditors: tousakasp
  * @Description: 存放工具函数
  */
 var utils_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
@@ -2160,7 +2162,7 @@ function isMobileVer() {
 ;// CONCATENATED MODULE: ./src/baidu/newPage/loader.tsx
 /*
  * @Author: mengzonefire
- * @LastEditors: 虚无
+ * @LastEditors: tousakasp
  * @Description: 新版度盘界面loader入口: https://pan.baidu.com/disk/main
  */
 
@@ -2266,7 +2268,7 @@ function loader_addBtn() {
 ;// CONCATENATED MODULE: ./src/baidu/syncPage/loader.tsx
 /*
  * @Author: mengzonefire
- * @LastEditors: 虚无
+ * @LastEditors: tousakasp
  * @Description: 同步空间loader入口: https://pan.baidu.com/disk/synchronization#
  */
 
@@ -2315,7 +2317,7 @@ function syncPage_loader_addBtn() {
 ;// CONCATENATED MODULE: ./src/baidu/sharePage/loader.tsx
 /*
  * @Author: mengzonefire
- * @LastEditors: 虚无
+ * @LastEditors: tousakasp
  * @Description: 文件分享页loader入口: https://pan.baidu.com/s/xxx
  */
 
@@ -2425,7 +2427,7 @@ function mobileSharePage_loader_addBtn() {
 ;// CONCATENATED MODULE: ./src/baidu/loader.tsx
 /*
  * @Author: mengzonefire
- * @LastEditors: 虚无
+ * @LastEditors: tousakasp
  * @Description: 主函数入口
  */
 
@@ -2533,7 +2535,7 @@ function loaderBaidu() {
 ;// CONCATENATED MODULE: ./src/common/injectStyle.tsx
 /*
  * @Author: mengzonefire
- * @LastEditors: 虚无
+ * @LastEditors: tousakasp
  * @Description: 样式注入模块
  */
 
